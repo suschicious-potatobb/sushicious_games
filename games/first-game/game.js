@@ -1,3 +1,21 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+// --- Firebase Configuration ---
+const firebaseConfig = { 
+    apiKey: "AIzaSyDqId4B-kbsT0Xn_QbfCIh88vgr0yDNQu0", 
+    authDomain: "sushicious-games.firebaseapp.com", 
+    projectId: "sushicious-games", 
+    storageBucket: "sushicious-games.firebasestorage.app", 
+    messagingSenderId: "597158694276", 
+    appId: "1:597158694276:web:b4ed18046b6711770d61d1", 
+    measurementId: "G-NS62XTVFTP" 
+}; 
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -8,22 +26,24 @@ const translations = {
         tap_to_start: "Tap to Start",
         score: "Score",
         game_over: "GAME OVER",
-        all_time_top: "--- ALL TIME TOP 3 ---",
-        today_top: "--- TODAY TOP 3 ---",
+        all_time_top: "--- YOUR BEST 3 ---",
+        today_top: "--- TODAY BEST 3 ---",
         community_top: "--- GLOBAL TOP 3 ---",
         tap_to_retry: "Tap to Retry",
-        pts: "pts"
+        pts: "pts",
+        loading: "Loading..."
     },
     ja: {
         game_title: "寿司タップ",
         tap_to_start: "タップしてスタート",
         score: "スコア",
         game_over: "ゲームオーバー",
-        all_time_top: "--- 通算ランキング ---",
-        today_top: "--- 本日のランキング ---",
+        all_time_top: "--- あなたのベスト3 ---",
+        today_top: "--- 本日のベスト3 ---",
         community_top: "--- 世界ランキング ---",
         tap_to_retry: "タップしてリトライ",
-        pts: "点"
+        pts: "点",
+        loading: "読み込み中..."
     }
 };
 
@@ -34,10 +54,41 @@ const t = (key) => translations[currentLang][key] || key;
 let canvasWidth, canvasHeight;
 let score = 0;
 let gameState = 'start'; // 'start', 'playing', 'gameOver'
+let globalRanking = [];
+let isLoadingRanking = false;
 
 // --- Ranking Configuration ---
 const STORAGE_KEY_ALL_TIME = 'sushicious_all_time_rank';
 const STORAGE_KEY_DAILY = 'sushicious_daily_rank';
+
+async function fetchGlobalRanking() {
+    if (isLoadingRanking) return;
+    isLoadingRanking = true;
+    try {
+        const q = query(collection(db, "rankings"), orderBy("score", "desc"), limit(3));
+        const querySnapshot = await getDocs(q);
+        globalRanking = querySnapshot.docs.map(doc => doc.data());
+    } catch (e) {
+        console.error("Error fetching ranking: ", e);
+    } finally {
+        isLoadingRanking = false;
+    }
+}
+
+async function saveGlobalScore(score) {
+    if (score <= 0) return;
+    try {
+        await addDoc(collection(db, "rankings"), {
+            score: score,
+            timestamp: serverTimestamp(),
+            userAgent: navigator.userAgent
+        });
+        // Refresh ranking after saving
+        fetchGlobalRanking();
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+}
 
 function getRanking(key) {
     const data = localStorage.getItem(key);
@@ -61,6 +112,11 @@ function saveRanking(key, score) {
     ranking.sort((a, b) => b.score - a.score);
     ranking = ranking.slice(0, 3); // Keep only top 3
     localStorage.setItem(key, JSON.stringify(ranking));
+    
+    // Also save to Firebase if it's high enough (simplified: always send to Firebase)
+    if (key === STORAGE_KEY_ALL_TIME) {
+        saveGlobalScore(score);
+    }
 }
 
 // --- Game Objects ---
@@ -68,41 +124,33 @@ let targets = [];
 let targetSpeed = 3;
 
 function resizeCanvas() {
-    // Get viewport size (CSS pixels)
     let viewWidth = window.innerWidth || 300;
     let viewHeight = window.innerHeight || 500;
-
-    // Default to filling the screen
     canvasWidth = viewWidth;
     canvasHeight = viewHeight;
-
-    // Only restrict width on desktop/landscape screens to maintain portrait ratio
     const maxAspectRatio = 9 / 16;
     if (viewWidth / viewHeight > maxAspectRatio) {
         canvasWidth = Math.floor(viewHeight * maxAspectRatio);
     }
-
-    // Ensure we have a valid size
     canvasWidth = Math.max(200, canvasWidth);
     canvasHeight = Math.max(300, canvasHeight);
-
-    // Set internal resolution
     canvas.width = Math.floor(canvasWidth);
     canvas.height = Math.floor(canvasHeight);
-
-    // Ensure the canvas element fills the width/height correctly in style
     canvas.style.width = canvas.width + 'px';
     canvas.style.height = canvas.height + 'px';
 }
 
-function drawRankList(title, list, yStart) {
+function drawRankList(title, list, yStart, isGlobal = false) {
     ctx.fillStyle = '#f0f0f0';
     ctx.font = 'bold 20px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(title, canvasWidth / 2, yStart);
     
     ctx.font = 'bold 18px monospace';
-    if (list.length === 0) {
+    if (isGlobal && isLoadingRanking && list.length === 0) {
+        ctx.fillStyle = '#999';
+        ctx.fillText(t('loading'), canvasWidth / 2, yStart + 35);
+    } else if (list.length === 0) {
         ctx.fillStyle = '#666';
         ctx.fillText('-', canvasWidth / 2, yStart + 35);
     } else {
@@ -114,21 +162,17 @@ function drawRankList(title, list, yStart) {
 }
 
 function drawStartScreen() {
-    // Background color
     ctx.fillStyle = '#0f0f0f';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
-    // Draw Title
     ctx.fillStyle = '#ff3e3e';
     ctx.font = 'bold 44px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(t('game_title'), canvasWidth / 2, canvasHeight * 0.15);
     
-    // Rankings (Currently using local as placeholder for global)
-    const allTime = getRanking(STORAGE_KEY_ALL_TIME);
-    drawRankList(t('community_top'), allTime, canvasHeight * 0.35);
+    // World Ranking from Firebase
+    drawRankList(t('community_top'), globalRanking, canvasHeight * 0.35, true);
 
-    // Hint - Animate opacity slightly or just draw
     ctx.fillStyle = `rgba(240, 240, 240, ${0.7 + Math.sin(Date.now() / 300) * 0.3})`;
     ctx.font = '22px sans-serif';
     ctx.fillText(t('tap_to_start'), canvasWidth / 2, canvasHeight * 0.85);
@@ -141,7 +185,6 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
         ctx.roundRect(x, y, width, height, radius);
         ctx.fill();
     } else {
-        // Fallback for older browsers
         ctx.beginPath();
         ctx.moveTo(x + radius, y);
         ctx.lineTo(x + width - radius, y);
@@ -158,13 +201,9 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
 }
 
 function drawGameScreen() {
-    // Clear to dark background
     ctx.fillStyle = '#121212';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-    // Draw targets
     targets.forEach(target => {
-        // Shari (Rice) - White oval
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
         if (ctx.ellipse) {
@@ -176,13 +215,9 @@ function drawGameScreen() {
         ctx.strokeStyle = '#e0e0e0';
         ctx.lineWidth = 1;
         ctx.stroke();
-
-        // Neta (Topping) - Red rectangle
         ctx.fillStyle = '#ff3e3e';
         drawRoundedRect(ctx, target.x - target.size / 2, target.y - target.size / 4, target.size, target.size / 2, 8);
     });
-
-    // Draw score (White text for visibility)
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 28px sans-serif';
     ctx.textAlign = 'left';
@@ -204,7 +239,6 @@ function drawGameOverScreen() {
     ctx.font = 'bold 20px sans-serif';
     ctx.fillText(t('score').toUpperCase(), canvasWidth / 2, canvasHeight * 0.33);
 
-    // Rankings
     const allTime = getRanking(STORAGE_KEY_ALL_TIME);
     const daily = getRanking(STORAGE_KEY_DAILY);
 
@@ -218,13 +252,9 @@ function drawGameOverScreen() {
 
 function update() {
     if (gameState !== 'playing') return;
-
-    // Move targets
     targets.forEach(target => {
         target.y += targetSpeed;
     });
-
-    // Add new targets
     if (Math.random() < 0.04) {
         const size = 50 + Math.random() * 30;
         targets.push({
@@ -233,15 +263,12 @@ function update() {
             size: size
         });
     }
-    
-    // Check for game over
     if (targets.some(t => t.y > canvasHeight + 50)) {
         gameState = 'gameOver';
         saveRanking(STORAGE_KEY_ALL_TIME, score);
         saveRanking(STORAGE_KEY_DAILY, score);
         lastStateChange = Date.now();
     }
-
     if (targets.length > 50) {
         targets = targets.filter(t => t.y < canvasHeight + 100);
     }
@@ -249,10 +276,7 @@ function update() {
 
 function gameLoop() {
     update();
-    
-    // Read lang preference frequently to sync with parent
     currentLang = localStorage.getItem('sushicious_lang') || 'en';
-
     if (gameState === 'start') {
         drawStartScreen();
     } else if (gameState === 'playing') {
@@ -260,7 +284,6 @@ function gameLoop() {
     } else if (gameState === 'gameOver') {
         drawGameOverScreen();
     }
-
     requestAnimationFrame(gameLoop);
 }
 
@@ -269,11 +292,9 @@ let lastStateChange = 0;
 function handleTap(event) {
     const now = Date.now();
     const canChangeState = (now - lastStateChange > 300);
-
     if (event.type === 'touchstart' && event.cancelable) {
         event.preventDefault();
     }
-
     const rect = canvas.getBoundingClientRect();
     let clientX, clientY;
     if (event.touches && event.touches.length > 0) {
@@ -286,7 +307,6 @@ function handleTap(event) {
         clientX = event.clientX;
         clientY = event.clientY;
     }
-
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     const tapX = (clientX - rect.left) * scaleX;
@@ -308,6 +328,8 @@ function handleTap(event) {
     } else if (gameState === 'gameOver' && canChangeState) {
         gameState = 'start';
         lastStateChange = now;
+        // Fetch latest rankings when returning to start screen
+        fetchGlobalRanking();
     }
 }
 
@@ -316,4 +338,5 @@ canvas.addEventListener('touchstart', handleTap, { passive: false });
 canvas.addEventListener('mousedown', handleTap, false);
 
 resizeCanvas();
+fetchGlobalRanking(); // Initial fetch
 gameLoop();
