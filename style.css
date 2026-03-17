@@ -303,12 +303,38 @@ footer {
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2.8rem;
+    header {
+        padding: 0.8rem 5%;
     }
-    
+
+    .logo {
+        font-size: 1.4rem;
+    }
+
     .nav-right {
-        gap: 1rem;
+        gap: 0.8rem;
+    }
+
+    .lang-toggle {
+        padding: 4px 12px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero {
+        padding: 4rem 5%;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
     }
     
     .footer-links {
