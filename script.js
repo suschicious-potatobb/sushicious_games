@@ -19,10 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
             contact_desc: "For feedback, bug reports, or other inquiries, please contact us at the following email address.",
             game_tag_action: "Action",
             game_tag_catch: "Catch",
+            game_tag_puzzle: "Puzzle",
             game_sushi_tap_title: "Sushi Tap",
             game_sushi_tap_desc: "Tap the falling sushi to score points!",
             game_sushi_catch_title: "Sushi Catch",
-            game_sushi_catch_desc: "Catch falling sushi on your plate!"
+            game_sushi_catch_desc: "Catch falling sushi on your plate!",
+            game_sushi_match_title: "Sushi Match",
+            game_sushi_match_desc: "Match the pairs of sushi as fast as you can!"
         },
         ja: {
             nav_games: "ゲーム一覧",
@@ -39,10 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
             contact_desc: "ご意見、ご感想、不具合のご報告などは、以下のメールアドレスまでご連絡ください。",
             game_tag_action: "アクション",
             game_tag_catch: "キャッチ",
+            game_tag_puzzle: "パズル",
             game_sushi_tap_title: "寿司タップ",
             game_sushi_tap_desc: "落ちてくる寿司をタップしてハイスコアを目指そう！",
             game_sushi_catch_title: "寿司キャッチ",
-            game_sushi_catch_desc: "お皿を動かして落ちてくる寿司をキャッチしよう！"
+            game_sushi_catch_desc: "お皿を動かして落ちてくる寿司をキャッチしよう！",
+            game_sushi_match_title: "寿司マッチ",
+            game_sushi_match_desc: "同じ寿司のペアを素早く揃えよう！"
         }
     };
 
@@ -76,6 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
             titleKey: 'game_sushi_catch_title',
             tagKey: 'game_tag_catch',
             thumbnail: 'games/sushi-catch/thumbnail.svg'
+        },
+        {
+            id: 'sushi-match',
+            titleKey: 'game_sushi_match_title',
+            tagKey: 'game_tag_puzzle',
+            thumbnail: 'games/sushi-match/thumbnail.svg'
         }
     ];
 
