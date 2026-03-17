@@ -129,7 +129,8 @@ function resize() {
     
     plate.width = canvasWidth * 0.2;
     plate.height = canvasHeight * 0.04;
-    plate.y = canvasHeight - plate.height - 20;
+    // Keep plate slightly higher from bottom for better visibility
+    plate.y = canvasHeight - plate.height - 40;
 }
 
 function spawnSushi() {

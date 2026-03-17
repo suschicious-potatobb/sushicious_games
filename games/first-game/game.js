@@ -127,20 +127,23 @@ let targets = [];
 let targetSpeed = 3;
 
 function resizeCanvas() {
-    let viewWidth = window.innerWidth || 300;
-    let viewHeight = window.innerHeight || 500;
+    let viewWidth = window.innerWidth;
+    let viewHeight = window.innerHeight;
+    
+    // Use slightly less than 100% to ensure no scrollbars
     canvasWidth = viewWidth;
     canvasHeight = viewHeight;
+    
     const maxAspectRatio = 9 / 16;
     if (viewWidth / viewHeight > maxAspectRatio) {
         canvasWidth = Math.floor(viewHeight * maxAspectRatio);
     }
-    canvasWidth = Math.max(200, canvasWidth);
-    canvasHeight = Math.max(300, canvasHeight);
-    canvas.width = Math.floor(canvasWidth);
-    canvas.height = Math.floor(canvasHeight);
-    canvas.style.width = canvas.width + 'px';
-    canvas.style.height = canvas.height + 'px';
+    
+    // Final safety check
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    canvas.style.width = canvasWidth + 'px';
+    canvas.style.height = canvasHeight + 'px';
 }
 
 function drawRankList(title, list, yStart, isGlobal = false) {

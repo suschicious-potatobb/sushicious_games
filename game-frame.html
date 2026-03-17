@@ -14,7 +14,15 @@
             background-color: #0f0f0f;
             font-family: 'Inter', sans-serif;
         }
+        #game-container {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            min-height: 0; /* Important for flex child */
+        }
         .ad-space {
+            flex-shrink: 0; /* Prevent ad space from shrinking */
             height: 90px;
             background: #1a1a1a;
             text-align: center;
@@ -24,12 +32,6 @@
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-        #game-container {
-            flex-grow: 1;
-            width: 100%;
-            height: calc(100% - 90px);
-            position: relative;
         }
         .back-button {
             position: absolute;
