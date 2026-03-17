@@ -317,44 +317,56 @@ footer {
 /* Responsive Styles */
 @media (max-width: 768px) {
     header {
-        padding: 0.6rem 3%;
+        padding: 0.8rem 5%;
         flex-direction: column;
-        gap: 0.6rem;
+        gap: 1rem;
         height: auto;
+        text-align: center;
     }
 
     .logo {
-        font-size: 1.3rem;
+        width: 100%;
+        font-size: 1.5rem;
+        margin-bottom: 0.2rem;
     }
 
     .nav-right {
         width: 100%;
         justify-content: center;
-        gap: 0.8rem;
+        gap: 1rem;
+        flex-wrap: nowrap; /* Prevent wrapping vertically */
     }
 
     .nav-links {
-        gap: 0.8rem;
+        gap: 1.2rem;
+        flex-shrink: 0;
     }
 
     .nav-links a {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
     }
 
     .lang-toggle {
-        padding: 4px 8px;
-        font-size: 0.7rem;
-        height: 28px;
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        height: 32px;
+        flex-shrink: 0;
     }
 
     .x-share-btn {
-        padding: 4px 10px;
-        font-size: 0.7rem;
+        padding: 6px;
+        font-size: 0; /* Hide "X" text on mobile */
+    }
+
+    .x-share-btn span {
+        display: none; /* Hide "X" text specifically */
     }
 
     .x-share-btn svg {
-        width: 12px;
-        height: 12px;
+        width: 16px;
+        height: 16px;
+        margin: 0;
     }
 
     .hero {
