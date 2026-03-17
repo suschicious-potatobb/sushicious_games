@@ -113,11 +113,21 @@ function saveRanking(key, score) {
 }
 
 function resize() {
-    const containerWidth = window.innerWidth;
-    const containerHeight = window.innerHeight;
-    const size = Math.min(containerWidth, containerHeight);
-    canvasWidth = canvas.width = size;
-    canvasHeight = canvas.height = size;
+    const viewWidth = window.innerWidth;
+    const viewHeight = window.innerHeight;
+    
+    canvasWidth = viewWidth;
+    canvasHeight = viewHeight;
+    
+    const maxAspectRatio = 9 / 16;
+    if (viewWidth / viewHeight > maxAspectRatio) {
+        canvasWidth = Math.floor(viewHeight * maxAspectRatio);
+    }
+    
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    canvas.style.width = canvasWidth + 'px';
+    canvas.style.height = canvasHeight + 'px';
 }
 
 function initGrid() {
@@ -150,12 +160,16 @@ function draw() {
     // Draw Grid
     const padding = 20;
     const cardSize = (canvasWidth - padding * (GRID_SIZE + 1)) / GRID_SIZE;
+    
+    // Calculate grid height to center it
+    const gridHeight = padding + (cardSize + padding) * GRID_SIZE;
+    const gridYStart = (canvasHeight - gridHeight) / 2 + 30;
 
     cards.forEach((card, i) => {
         const row = Math.floor(i / GRID_SIZE);
         const col = i % GRID_SIZE;
         const x = padding + col * (cardSize + padding);
-        const y = padding + row * (cardSize + padding) + 60;
+        const y = gridYStart + row * (cardSize + padding);
 
         ctx.fillStyle = card.isMatched ? 'rgba(255, 255, 255, 0.1)' : (card.isFlipped ? '#fff' : '#e63946');
         ctx.beginPath();
@@ -172,11 +186,11 @@ function draw() {
 
     // Draw UI
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 20px Inter, sans-serif';
+    ctx.font = 'bold 24px Inter, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(`${t('score')}: ${score}`, 20, 40);
+    ctx.fillText(`${t('score')}: ${score}`, 20, 45);
     ctx.textAlign = 'right';
-    ctx.fillText(`${t('time')}: ${Math.ceil(timeLeft)}s`, canvasWidth - 20, 40);
+    ctx.fillText(`${t('time')}: ${Math.ceil(timeLeft)}s`, canvasWidth - 20, 45);
 
     if (gameState === 'start') {
         drawOverlay(t('game_title'), t('tap_to_start'));
@@ -190,32 +204,32 @@ function drawOverlay(title, subtitle) {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
     ctx.fillStyle = '#e63946';
-    ctx.font = 'bold 40px Inter, sans-serif';
+    ctx.font = 'bold 44px Inter, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(title, canvasWidth/2, canvasHeight/2 - 40);
+    ctx.fillText(title, canvasWidth/2, canvasHeight * 0.2);
     
     ctx.fillStyle = '#fff';
-    ctx.font = '20px Inter, sans-serif';
-    ctx.fillText(subtitle, canvasWidth/2, canvasHeight/2 + 20);
+    ctx.font = '24px Inter, sans-serif';
+    ctx.fillText(subtitle, canvasWidth/2, canvasHeight * 0.28);
 
     if (isLoadingRanking) {
-        ctx.font = '16px Inter, sans-serif';
-        ctx.fillText(t('loading'), canvasWidth/2, canvasHeight/2 + 150);
+        ctx.font = '18px Inter, sans-serif';
+        ctx.fillText(t('loading'), canvasWidth/2, canvasHeight * 0.8);
     } else {
         drawRankings();
     }
 }
 
 function drawRankings() {
-    let y = canvasHeight / 2 + 80;
-    ctx.font = 'bold 16px Inter, sans-serif';
+    let y = canvasHeight * 0.45;
+    ctx.font = 'bold 20px Inter, sans-serif';
     ctx.fillStyle = '#d4af37';
     ctx.fillText(t('community_top'), canvasWidth/2, y);
     
-    ctx.font = '14px Inter, sans-serif';
+    ctx.font = '18px Inter, sans-serif';
     ctx.fillStyle = '#fff';
     globalRanking.forEach((r, i) => {
-        ctx.fillText(`${i+1}. ${r.score}${t('pts')}`, canvasWidth/2, y + 25 + i*20);
+        ctx.fillText(`${i+1}. ${r.score}${t('pts')}`, canvasWidth/2, y + 35 + i*30);
     });
 }
 

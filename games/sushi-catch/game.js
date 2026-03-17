@@ -118,15 +118,26 @@ function saveRanking(key, score) {
 }
 
 function resize() {
-    const containerWidth = window.innerWidth;
-    const containerHeight = window.innerHeight;
-    const size = Math.min(containerWidth, containerHeight);
-    canvasWidth = canvas.width = size;
-    canvasHeight = canvas.height = size;
+    const viewWidth = window.innerWidth;
+    const viewHeight = window.innerHeight;
     
-    plate.width = canvasWidth * 0.2;
-    plate.height = canvasHeight * 0.04;
-    // Keep plate slightly higher from bottom for better visibility
+    canvasWidth = viewWidth;
+    canvasHeight = viewHeight;
+    
+    // Maintain aspect ratio if too wide (like on desktop)
+    const maxAspectRatio = 9 / 16;
+    if (viewWidth / viewHeight > maxAspectRatio) {
+        canvasWidth = Math.floor(viewHeight * maxAspectRatio);
+    }
+    
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    canvas.style.width = canvasWidth + 'px';
+    canvas.style.height = canvasHeight + 'px';
+    
+    plate.width = canvasWidth * 0.25;
+    plate.height = 20;
+    // Position plate at bottom
     plate.y = canvasHeight - plate.height - 40;
 }
 

@@ -24,7 +24,8 @@
         }
         .ad-space {
             flex-shrink: 0;
-            height: 90px;
+            height: calc(90px + env(safe-area-inset-bottom));
+            padding-bottom: env(safe-area-inset-bottom);
             background: #1a1a1a;
             text-align: center;
             line-height: 90px;
@@ -33,7 +34,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             text-transform: uppercase;
             letter-spacing: 1px;
-            z-index: 1000; /* Ensure it stays on top if anything overflows */
+            z-index: 1000;
         }
         .back-button {
             position: absolute;
