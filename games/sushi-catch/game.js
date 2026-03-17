@@ -118,13 +118,12 @@ function saveRanking(key, score) {
 }
 
 function resize() {
-    const viewWidth = window.innerWidth;
-    const viewHeight = window.innerHeight;
+    const viewWidth = document.documentElement.clientWidth;
+    const viewHeight = document.documentElement.clientHeight;
     
     canvasWidth = viewWidth;
     canvasHeight = viewHeight;
     
-    // Maintain aspect ratio if too wide (like on desktop)
     const maxAspectRatio = 9 / 16;
     if (viewWidth / viewHeight > maxAspectRatio) {
         canvasWidth = Math.floor(viewHeight * maxAspectRatio);
@@ -137,7 +136,6 @@ function resize() {
     
     plate.width = canvasWidth * 0.25;
     plate.height = 20;
-    // Position plate at bottom
     plate.y = canvasHeight - plate.height - 40;
 }
 
@@ -287,7 +285,9 @@ function gameLoop() {
 }
 
 // --- Events ---
-window.addEventListener('resize', resize);
+window.addEventListener('resize', () => {
+    setTimeout(resize, 100);
+});
 
 let isInputActive = false;
 function handleInput(clientX) {

@@ -124,10 +124,10 @@ let targets = [];
 let targetSpeed = 3;
 
 function resizeCanvas() {
-    let viewWidth = window.innerWidth;
-    let viewHeight = window.innerHeight;
+    // Use clientHeight/Width for better mobile precision
+    let viewWidth = document.documentElement.clientWidth;
+    let viewHeight = document.documentElement.clientHeight;
     
-    // Use slightly less than 100% to ensure no scrollbars
     canvasWidth = viewWidth;
     canvasHeight = viewHeight;
     
@@ -136,7 +136,6 @@ function resizeCanvas() {
         canvasWidth = Math.floor(viewHeight * maxAspectRatio);
     }
     
-    // Final safety check
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
     canvas.style.width = canvasWidth + 'px';
@@ -345,7 +344,9 @@ function handleTap(event) {
     }
 }
 
-window.addEventListener('resize', resizeCanvas, false);
+window.addEventListener('resize', () => {
+    setTimeout(resizeCanvas, 100);
+}, false);
 canvas.addEventListener('touchstart', handleTap, { passive: false });
 canvas.addEventListener('mousedown', handleTap, false);
 

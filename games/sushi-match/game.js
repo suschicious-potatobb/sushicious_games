@@ -113,8 +113,8 @@ function saveRanking(key, score) {
 }
 
 function resize() {
-    const viewWidth = window.innerWidth;
-    const viewHeight = window.innerHeight;
+    const viewWidth = document.documentElement.clientWidth;
+    const viewHeight = document.documentElement.clientHeight;
     
     canvasWidth = viewWidth;
     canvasHeight = viewHeight;
@@ -258,7 +258,9 @@ function gameLoop() {
 }
 
 // --- Events ---
-window.addEventListener('resize', resize);
+window.addEventListener('resize', () => {
+    setTimeout(resize, 100);
+});
 
 function handleCardClick(x, y) {
     if (gameState === 'start') {
