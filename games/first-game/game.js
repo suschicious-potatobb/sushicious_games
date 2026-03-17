@@ -10,6 +10,7 @@ const translations = {
         game_over: "GAME OVER",
         all_time_top: "--- ALL TIME TOP 3 ---",
         today_top: "--- TODAY TOP 3 ---",
+        community_top: "--- GLOBAL TOP 3 ---",
         tap_to_retry: "Tap to Retry",
         pts: "pts"
     },
@@ -20,6 +21,7 @@ const translations = {
         game_over: "ゲームオーバー",
         all_time_top: "--- 通算ランキング ---",
         today_top: "--- 本日のランキング ---",
+        community_top: "--- 世界ランキング ---",
         tap_to_retry: "タップしてリトライ",
         pts: "点"
     }
@@ -93,21 +95,43 @@ function resizeCanvas() {
     canvas.style.height = canvas.height + 'px';
 }
 
+function drawRankList(title, list, yStart) {
+    ctx.fillStyle = '#f0f0f0';
+    ctx.font = 'bold 20px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(title, canvasWidth / 2, yStart);
+    
+    ctx.font = 'bold 18px monospace';
+    if (list.length === 0) {
+        ctx.fillStyle = '#666';
+        ctx.fillText('-', canvasWidth / 2, yStart + 35);
+    } else {
+        list.forEach((item, i) => {
+            ctx.fillStyle = i === 0 ? '#ffd700' : (i === 1 ? '#e0e0e0' : (i === 2 ? '#cd7f32' : '#ffffff'));
+            ctx.fillText(`${i + 1}. ${item.score} ${t('pts')}`, canvasWidth / 2, yStart + 35 + (i * 28));
+        });
+    }
+}
+
 function drawStartScreen() {
-    // Background color (Improved visibility)
+    // Background color
     ctx.fillStyle = '#0f0f0f';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
     // Draw Title
     ctx.fillStyle = '#ff3e3e';
-    ctx.font = 'bold 48px sans-serif';
+    ctx.font = 'bold 44px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(t('game_title'), canvasWidth / 2, canvasHeight / 3);
+    ctx.fillText(t('game_title'), canvasWidth / 2, canvasHeight * 0.15);
     
-    // Draw Hint
-    ctx.fillStyle = '#f0f0f0';
-    ctx.font = '24px sans-serif';
-    ctx.fillText(t('tap_to_start'), canvasWidth / 2, canvasHeight / 2);
+    // Rankings (Currently using local as placeholder for global)
+    const allTime = getRanking(STORAGE_KEY_ALL_TIME);
+    drawRankList(t('community_top'), allTime, canvasHeight * 0.35);
+
+    // Hint - Animate opacity slightly or just draw
+    ctx.fillStyle = `rgba(240, 240, 240, ${0.7 + Math.sin(Date.now() / 300) * 0.3})`;
+    ctx.font = '22px sans-serif';
+    ctx.fillText(t('tap_to_start'), canvasWidth / 2, canvasHeight * 0.85);
 }
 
 // --- Drawing Helpers ---
@@ -184,25 +208,8 @@ function drawGameOverScreen() {
     const allTime = getRanking(STORAGE_KEY_ALL_TIME);
     const daily = getRanking(STORAGE_KEY_DAILY);
 
-    const drawRank = (title, list, yStart) => {
-        ctx.fillStyle = '#f0f0f0';
-        ctx.font = 'bold 22px sans-serif';
-        ctx.fillText(title, canvasWidth / 2, yStart);
-        
-        ctx.font = 'bold 20px monospace';
-        if (list.length === 0) {
-            ctx.fillStyle = '#666';
-            ctx.fillText('-', canvasWidth / 2, yStart + 35);
-        } else {
-            list.forEach((item, i) => {
-                ctx.fillStyle = i === 0 ? '#ffd700' : (i === 1 ? '#e0e0e0' : (i === 2 ? '#cd7f32' : '#ffffff'));
-                ctx.fillText(`${i + 1}. ${item.score} ${t('pts')}`, canvasWidth / 2, yStart + 35 + (i * 28));
-            });
-        }
-    };
-
-    drawRank(t('all_time_top'), allTime, canvasHeight * 0.45);
-    drawRank(t('today_top'), daily, canvasHeight * 0.70);
+    drawRankList(t('all_time_top'), allTime, canvasHeight * 0.45);
+    drawRankList(t('today_top'), daily, canvasHeight * 0.70);
 
     ctx.fillStyle = '#ffffff';
     ctx.font = '20px sans-serif';
