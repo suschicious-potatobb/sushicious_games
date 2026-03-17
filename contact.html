@@ -3,23 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お問い合わせ - Sushicious Games</title>
+    <title data-i18n="nav_contact">Contact - Sushicious Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1><a href="index.html">Sushicious Games</a></h1>
+        <a href="index.html" class="logo">Sushi<span>cious</span></a>
+        <div class="nav-right">
+            <button id="lang-toggle" class="lang-toggle">JP / EN</button>
+        </div>
     </header>
 
     <main>
-        <h2>お問い合わせ</h2>
-        <p>ご意見、ご感想、不具合のご報告などは、以下のメールアドレスまでご連絡ください。</p>
+        <h2 data-i18n="nav_contact">Contact</h2>
+        <p data-i18n="contact_desc">For feedback, bug reports, or other inquiries, please contact us at the following email address.</p>
         <p><a href="mailto:contact@example.com">contact@example.com</a></p>
-        <p>※ 上記のメールアドレスはダミーです。後で実際のメールアドレスに置き換えてください。</p>
     </main>
 
     <footer>
-        <p>&copy; 2026 Sushicious Games</p>
+        <div class="footer-content">
+            <a href="index.html" class="logo">Sushi<span>cious</span></a>
+            <div class="footer-links">
+                <a href="terms.html" data-i18n="footer_terms">Terms</a>
+                <a href="privacy.html" data-i18n="footer_privacy">Privacy</a>
+                <a href="contact.html" data-i18n="footer_contact">Contact</a>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2026 Sushicious Games. <span data-i18n="all_rights_reserved">All rights reserved.</span></p>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

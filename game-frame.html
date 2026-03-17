@@ -11,19 +11,24 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            background-color: #0f0f0f;
+            font-family: 'Inter', sans-serif;
         }
         .ad-space {
             height: 90px;
-            background: #eee;
+            background: #1a1a1a;
             text-align: center;
             line-height: 90px;
             color: #666;
-            font-size: 14px;
+            font-size: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         #game-container {
             flex-grow: 1;
             width: 100%;
-            height: calc(100% - 90px); /* Subtract ad-space height */
+            height: calc(100% - 90px);
             position: relative;
         }
         iframe {
@@ -38,9 +43,8 @@
     <div id="game-container">
         <iframe id="game-iframe"></iframe>
     </div>
-    <div class="ad-space">
-        <!-- AdSense広告スペース -->
-        <p>広告</p>
+    <div class="ad-space" id="ad-text">
+        Advertisement
     </div>
 
     <script>
@@ -48,11 +52,15 @@
             const iframe = document.getElementById('game-iframe');
             const urlParams = new URLSearchParams(window.location.search);
             const gameId = urlParams.get('game');
+            const adText = document.getElementById('ad-text');
+
+            // Sync language for ad text
+            const currentLang = localStorage.getItem('sushicious_lang') || 'en';
+            adText.textContent = currentLang === 'ja' ? 'スポンサー広告' : 'Advertisement';
 
             if (gameId) {
                 iframe.src = `games/${gameId}/index.html`;
             } else {
-                // ゲームIDがない場合はトップページにリダイレクト
                 window.location.href = 'index.html';
             }
         });

@@ -1,6 +1,33 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// --- Multilingual Support ---
+const translations = {
+    en: {
+        game_title: "Sushi Tap",
+        tap_to_start: "Tap to Start",
+        score: "Score",
+        game_over: "GAME OVER",
+        all_time_top: "--- ALL TIME TOP 3 ---",
+        today_top: "--- TODAY TOP 3 ---",
+        tap_to_retry: "Tap to Retry",
+        pts: "pts"
+    },
+    ja: {
+        game_title: "寿司タップ",
+        tap_to_start: "タップしてスタート",
+        score: "スコア",
+        game_over: "ゲームオーバー",
+        all_time_top: "--- 通算ランキング ---",
+        today_top: "--- 本日のランキング ---",
+        tap_to_retry: "タップしてリトライ",
+        pts: "点"
+    }
+};
+
+let currentLang = localStorage.getItem('sushicious_lang') || (navigator.language.startsWith('ja') ? 'ja' : 'en');
+const t = (key) => translations[currentLang][key] || key;
+
 // --- Game Configuration ---
 let canvasWidth, canvasHeight;
 let score = 0;
@@ -35,7 +62,6 @@ function saveRanking(key, score) {
 }
 
 // --- Game Objects ---
-let player = { x: 0, y: 0, size: 50 }; // Represents the player's tap
 let targets = [];
 let targetSpeed = 3;
 
@@ -58,7 +84,7 @@ function resizeCanvas() {
     canvasWidth = Math.max(200, canvasWidth);
     canvasHeight = Math.max(300, canvasHeight);
 
-    // Set internal resolution (use Math.floor for safety)
+    // Set internal resolution
     canvas.width = Math.floor(canvasWidth);
     canvas.height = Math.floor(canvasHeight);
 
@@ -68,20 +94,28 @@ function resizeCanvas() {
 }
 
 function drawStartScreen() {
-    ctx.fillStyle = '#333';
+    // Background color (Improved visibility)
+    ctx.fillStyle = '#0f0f0f';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    ctx.fillStyle = 'white';
-    ctx.font = '48px sans-serif';
+    
+    // Draw Title
+    ctx.fillStyle = '#ff3e3e';
+    ctx.font = 'bold 48px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('寿司タップ', canvasWidth / 2, canvasHeight / 3);
+    ctx.fillText(t('game_title'), canvasWidth / 2, canvasHeight / 3);
+    
+    // Draw Hint
+    ctx.fillStyle = '#f0f0f0';
     ctx.font = '24px sans-serif';
-    ctx.fillText('タップしてスタート', canvasWidth / 2, canvasHeight / 2);
+    ctx.fillText(t('tap_to_start'), canvasWidth / 2, canvasHeight / 2);
 }
 
 // --- Drawing Helpers ---
 function drawRoundedRect(ctx, x, y, width, height, radius) {
     if (ctx.roundRect) {
+        ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
+        ctx.fill();
     } else {
         // Fallback for older browsers
         ctx.beginPath();
@@ -95,83 +129,84 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
         ctx.lineTo(x, y + radius);
         ctx.quadraticCurveTo(x, y, x + radius, y);
         ctx.closePath();
+        ctx.fill();
     }
 }
 
 function drawGameScreen() {
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    // Clear to dark background
+    ctx.fillStyle = '#121212';
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
     // Draw targets
     targets.forEach(target => {
         // Shari (Rice) - White oval
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = '#ffffff';
         ctx.beginPath();
         if (ctx.ellipse) {
             ctx.ellipse(target.x, target.y + 10, target.size / 2, target.size / 3, 0, 0, Math.PI * 2);
         } else {
-            // Fallback for very old browsers: simple circle
             ctx.arc(target.x, target.y + 10, target.size / 2.5, 0, Math.PI * 2);
         }
         ctx.fill();
-        ctx.strokeStyle = '#ccc';
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 1;
         ctx.stroke();
 
         // Neta (Topping) - Red rectangle
-        ctx.fillStyle = 'red';
-        ctx.beginPath();
-        drawRoundedRect(ctx, target.x - target.size / 2, target.y - target.size / 4, target.size, target.size / 2, 5);
-        ctx.fill();
+        ctx.fillStyle = '#ff3e3e';
+        drawRoundedRect(ctx, target.x - target.size / 2, target.y - target.size / 4, target.size, target.size / 2, 8);
     });
 
-    // Draw score
-    ctx.fillStyle = 'black';
-    ctx.font = '32px sans-serif';
+    // Draw score (White text for visibility)
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 28px sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(`スコア: ${score}`, 10, 40);
+    ctx.fillText(`${t('score')}: ${score}`, 15, 45);
 }
 
 function drawGameOverScreen() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+    ctx.fillStyle = 'rgba(15, 15, 15, 0.9)';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 40px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('GAME OVER', canvasWidth / 2, canvasHeight * 0.15);
+    ctx.fillText(t('game_over'), canvasWidth / 2, canvasHeight * 0.15);
     
     ctx.fillStyle = '#ffcc00';
-    ctx.font = 'bold 48px sans-serif';
-    ctx.fillText(score, canvasWidth / 2, canvasHeight * 0.25);
-    ctx.font = '20px sans-serif';
-    ctx.fillText('SCORE', canvasWidth / 2, canvasHeight * 0.3);
+    ctx.font = 'bold 54px sans-serif';
+    ctx.fillText(score, canvasWidth / 2, canvasHeight * 0.28);
+    ctx.font = 'bold 20px sans-serif';
+    ctx.fillText(t('score').toUpperCase(), canvasWidth / 2, canvasHeight * 0.33);
 
     // Rankings
     const allTime = getRanking(STORAGE_KEY_ALL_TIME);
     const daily = getRanking(STORAGE_KEY_DAILY);
 
     const drawRank = (title, list, yStart) => {
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 20px sans-serif';
+        ctx.fillStyle = '#f0f0f0';
+        ctx.font = 'bold 22px sans-serif';
         ctx.fillText(title, canvasWidth / 2, yStart);
         
-        ctx.font = '18px monospace';
+        ctx.font = 'bold 20px monospace';
         if (list.length === 0) {
-            ctx.fillStyle = '#999';
-            ctx.fillText('-', canvasWidth / 2, yStart + 30);
+            ctx.fillStyle = '#666';
+            ctx.fillText('-', canvasWidth / 2, yStart + 35);
         } else {
             list.forEach((item, i) => {
-                ctx.fillStyle = i === 0 ? '#ffd700' : (i === 1 ? '#c0c0c0' : (i === 2 ? '#cd7f32' : 'white'));
-                ctx.fillText(`${i + 1}. ${item.score} pts`, canvasWidth / 2, yStart + 30 + (i * 25));
+                ctx.fillStyle = i === 0 ? '#ffd700' : (i === 1 ? '#e0e0e0' : (i === 2 ? '#cd7f32' : '#ffffff'));
+                ctx.fillText(`${i + 1}. ${item.score} ${t('pts')}`, canvasWidth / 2, yStart + 35 + (i * 28));
             });
         }
     };
 
-    drawRank('--- ALL TIME TOP 3 ---', allTime, canvasHeight * 0.4);
-    drawRank('--- TODAY TOP 3 ---', daily, canvasHeight * 0.65);
+    drawRank(t('all_time_top'), allTime, canvasHeight * 0.45);
+    drawRank(t('today_top'), daily, canvasHeight * 0.70);
 
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '20px sans-serif';
-    ctx.fillText('Tap to Retry', canvasWidth / 2, canvasHeight * 0.9);
+    ctx.fillText(t('tap_to_retry'), canvasWidth / 2, canvasHeight * 0.92);
 }
 
 function update() {
@@ -182,10 +217,8 @@ function update() {
         target.y += targetSpeed;
     });
 
-    // Add new targets periodically
-    // Increased spawn rate slightly for testing (0.04)
+    // Add new targets
     if (Math.random() < 0.04) {
-        // Ensure targets are within canvas width (with margin)
         const size = 50 + Math.random() * 30;
         targets.push({
             x: size/2 + Math.random() * (canvasWidth - size),
@@ -194,8 +227,7 @@ function update() {
         });
     }
     
-    // Check for game over (target falls below bottom)
-    // Add some buffer (50px) so it doesn't end too abruptly
+    // Check for game over
     if (targets.some(t => t.y > canvasHeight + 50)) {
         gameState = 'gameOver';
         saveRanking(STORAGE_KEY_ALL_TIME, score);
@@ -203,7 +235,6 @@ function update() {
         lastStateChange = Date.now();
     }
 
-    // Remove targets that are definitely off-screen to keep the array small
     if (targets.length > 50) {
         targets = targets.filter(t => t.y < canvasHeight + 100);
     }
@@ -211,8 +242,9 @@ function update() {
 
 function gameLoop() {
     update();
-
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    
+    // Read lang preference frequently to sync with parent
+    currentLang = localStorage.getItem('sushicious_lang') || 'en';
 
     if (gameState === 'start') {
         drawStartScreen();
@@ -229,17 +261,13 @@ let lastStateChange = 0;
 
 function handleTap(event) {
     const now = Date.now();
-    // Debounce state changes (0.3s)
     const canChangeState = (now - lastStateChange > 300);
 
-    // Only prevent default if it's a touch event to avoid breaking mouse interactions
     if (event.type === 'touchstart' && event.cancelable) {
         event.preventDefault();
     }
 
     const rect = canvas.getBoundingClientRect();
-    
-    // Improved coordinate calculation for both touch and mouse
     let clientX, clientY;
     if (event.touches && event.touches.length > 0) {
         clientX = event.touches[0].clientX;
@@ -252,7 +280,6 @@ function handleTap(event) {
         clientY = event.clientY;
     }
 
-    // Scale coordinates based on canvas styling vs internal resolution
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     const tapX = (clientX - rect.left) * scaleX;
@@ -264,7 +291,6 @@ function handleTap(event) {
         targets = [];
         lastStateChange = now;
     } else if (gameState === 'playing') {
-        // Check if a target was tapped
         targets.forEach((target, index) => {
             const distance = Math.sqrt(Math.pow(tapX - target.x, 2) + Math.pow(tapY - target.y, 2));
             if (distance < target.size / 2) {
@@ -278,13 +304,9 @@ function handleTap(event) {
     }
 }
 
-// --- Event Listeners ---
 window.addEventListener('resize', resizeCanvas, false);
 canvas.addEventListener('touchstart', handleTap, { passive: false });
-canvas.addEventListener('mousedown', handleTap, false); // For desktop testing
+canvas.addEventListener('mousedown', handleTap, false);
 
-// --- Initialisation ---
-console.log('Game Initializing...');
 resizeCanvas();
-console.log('Canvas Size:', canvasWidth, 'x', canvasHeight);
 gameLoop();

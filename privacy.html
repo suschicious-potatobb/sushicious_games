@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>プライバシーポリシー - Sushicious Games</title>
+    <title data-i18n="footer_privacy">Privacy - Sushicious Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1><a href="index.html">Sushicious Games</a></h1>
+        <a href="index.html" class="logo">Sushi<span>cious</span></a>
+        <div class="nav-right">
+            <button id="lang-toggle" class="lang-toggle">JP / EN</button>
+        </div>
     </header>
 
     <main>
-        <h2>プライバシーポリシー</h2>
-        <p>Sushicious Games（以下、「当サイト」といいます。）は、ユーザーの個人情報保護の重要性について認識し、個人情報の保護に関する法律（以下、「個人情報保護法」といいます。）を遵守すると共に、以下のプライバシーポリシー（以下、「本プライバシーポリシー」といいます。）に従い、適切な取扱い及び保護に努めます。</p>
+        <h2 data-i18n="footer_privacy">Privacy Policy</h2>
+        <div id="privacy-content">
+            <p>Sushicious Games（以下、「当サイト」といいます。）は、ユーザーの個人情報保護の重要性について認識し、適切な取扱い及び保護に努めます。</p>
 
         <h3>1. 個人情報の定義</h3>
         <p>本プライバシーポリシーにおいて、個人情報とは、個人情報保護法第2条第1項により定義された個人情報、すなわち、生存する個人に関する情報であって、当該情報に含まれる氏名、生年月日その他の記述等により特定の個人を識別することができるもの（他の情報と容易に照合することができ、それにより特定の個人を識別することができることとなるものを含みます。）を意味するものとします。</p>
@@ -34,10 +41,21 @@
         <h3>6. プライバシーポリシーの変更について</h3>
         <p>当サイトは、個人情報に関して適用される日本の法令を遵守するとともに、本ポリシーの内容を適宜見直しその改善に努めます。修正された最新のプライバシーポリシーは常に本ページにて開示されます。</p>
 
+        </div>
     </main>
 
     <footer>
-        <p>&copy; 2026 Sushicious Games</p>
+        <div class="footer-content">
+            <a href="index.html" class="logo">Sushi<span>cious</span></a>
+            <div class="footer-links">
+                <a href="terms.html" data-i18n="footer_terms">Terms</a>
+                <a href="privacy.html" data-i18n="footer_privacy">Privacy</a>
+                <a href="contact.html" data-i18n="footer_contact">Contact</a>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2026 Sushicious Games. <span data-i18n="all_rights_reserved">All rights reserved.</span></p>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

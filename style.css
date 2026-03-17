@@ -2,11 +2,11 @@
     --primary-color: #ff3e3e;
     --secondary-color: #2a2a2a;
     --accent-color: #ffcc00;
-    --bg-dark: #121212;
-    --bg-card: #1e1e1e;
-    --text-main: #ffffff;
-    --text-muted: #b0b0b0;
-    --transition: all 0.3s ease;
+    --bg-dark: #0f0f0f; /* Slightly darker */
+    --bg-card: #1a1a1a;
+    --text-main: #f0f0f0; /* Soft white for better reading */
+    --text-muted: #a0a0a0;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -23,26 +23,63 @@ body {
     overflow-x: hidden;
 }
 
+/* Explicitly style all links to avoid default blue */
+a {
+    color: var(--text-main);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:visited {
+    color: var(--text-main);
+}
+
+a:hover {
+    color: var(--primary-color);
+}
+
 /* Header & Navigation */
 header {
-    background: rgba(18, 18, 18, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem 5%;
+    background: rgba(15, 15, 15, 0.9);
+    backdrop-filter: blur(12px);
+    padding: 1rem 5%;
     position: sticky;
     top: 0;
     z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.lang-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-main);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.lang-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--primary-color);
 }
 
 .logo {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 900;
     letter-spacing: -1px;
     color: var(--primary-color);
-    text-decoration: none;
     text-transform: uppercase;
 }
 

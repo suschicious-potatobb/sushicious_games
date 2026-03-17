@@ -12,28 +12,31 @@
 <body>
     <header>
         <a href="index.html" class="logo">Sushi<span>cious</span></a>
-        <nav class="footer-links">
-            <a href="#games">Games</a>
-            <a href="contact.html">Contact</a>
-        </nav>
+        <div class="nav-right">
+            <nav class="footer-links">
+                <a href="#games" data-i18n="nav_games">Games</a>
+                <a href="contact.html" data-i18n="nav_contact">Contact</a>
+            </nav>
+            <button id="lang-toggle" class="lang-toggle">JP / EN</button>
+        </div>
     </header>
 
     <section class="hero">
-        <h1>Bite-sized Fun.</h1>
-        <p>Explore our collection of premium, mobile-optimized indie games. No installs, just play.</p>
+        <h1 data-i18n="hero_title">Bite-sized Fun.</h1>
+        <p data-i18n="hero_subtitle">Explore our collection of premium, mobile-optimized indie games. No installs, just play.</p>
     </section>
 
     <main id="games">
-        <h2 class="section-title">Featured Games</h2>
+        <h2 class="section-title" data-i18n="featured_games">Featured Games</h2>
         <div id="game-list">
             <!-- Dynamic Content -->
         </div>
 
         <div class="ad-space">
-            <div class="ad-label">Advertisement</div>
+            <div class="ad-label" data-i18n="advertisement">Advertisement</div>
             <div id="ad-placeholder">
                 <!-- AdSense code will go here -->
-                <p style="color: #444;">Ad Space</p>
+                <p style="color: #444;" data-i18n="ad_space">Ad Space</p>
             </div>
         </div>
     </main>
@@ -42,12 +45,12 @@
         <div class="footer-content">
             <a href="index.html" class="logo">Sushi<span>cious</span></a>
             <div class="footer-links">
-                <a href="terms.html">Terms</a>
-                <a href="privacy.html">Privacy</a>
-                <a href="contact.html">Contact</a>
+                <a href="terms.html" data-i18n="footer_terms">Terms</a>
+                <a href="privacy.html" data-i18n="footer_privacy">Privacy</a>
+                <a href="contact.html" data-i18n="footer_contact">Contact</a>
             </div>
         </div>
-        <p class="copyright">&copy; 2026 Sushicious Games. All rights reserved.</p>
+        <p class="copyright">&copy; 2026 Sushicious Games. <span data-i18n="all_rights_reserved">All rights reserved.</span></p>
     </footer>
 
     <script src="script.js"></script>
