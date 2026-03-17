@@ -1,20 +1,22 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
 
 // --- Firebase Configuration ---
 const firebaseConfig = { 
-    apiKey: "AIzaSyDqId4B-kbsT0Xn_QbfCIh88vgr0yDNQu0", 
+    apiKey: "AIzaSyDffNMWkocUzsvZkbX_sOXtk5NHr8-KQME", 
     authDomain: "sushicious-games.firebaseapp.com", 
     projectId: "sushicious-games", 
     storageBucket: "sushicious-games.firebasestorage.app", 
     messagingSenderId: "597158694276", 
-    appId: "1:597158694276:web:b4ed18046b6711770d61d1", 
-    measurementId: "G-NS62XTVFTP" 
+    appId: "1:597158694276:web:28d7699f3e4ef4050d61d1", 
+    measurementId: "G-H309XJ7ST6" 
 }; 
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const analytics = getAnalytics(app);
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
