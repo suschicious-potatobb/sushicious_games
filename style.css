@@ -75,6 +75,32 @@ header {
     border-color: var(--primary-color);
 }
 
+.x-share-btn {
+    background: #000;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: var(--transition);
+}
+
+.x-share-btn:hover {
+    background: #333;
+    border-color: #fff;
+    color: #fff;
+}
+
+.x-share-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
 .logo {
     font-size: 1.6rem;
     font-weight: 900;
