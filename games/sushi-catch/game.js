@@ -247,6 +247,14 @@ function drawGameOver() {
     drawOverlay(t('game_over'), t('tap_to_retry'));
 }
 
+let lastNotifiedState = '';
+function notifyParentState() {
+    if (gameState === lastNotifiedState) return;
+    const message = gameState === 'playing' ? 'gameState:playing' : 'gameState:not_playing';
+    window.parent.postMessage(message, '*');
+    lastNotifiedState = gameState;
+}
+
 function gameLoop() {
     // Sync language from portal
     const portalLang = localStorage.getItem('sushicious_lang');
@@ -256,6 +264,7 @@ function gameLoop() {
 
     update();
     draw();
+    notifyParentState();
     requestAnimationFrame(gameLoop);
 }
 

@@ -48,7 +48,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
+            opacity: 1;
         }
         .back-button:hover {
             background: rgba(255, 62, 62, 0.9);
@@ -93,6 +94,18 @@
             } else {
                 window.location.href = 'index.html';
             }
+
+            // Handle visibility messages from games
+            window.addEventListener('message', (event) => {
+                const backButton = document.getElementById('back-button');
+                if (event.data === 'gameState:playing') {
+                    backButton.style.opacity = '0';
+                    backButton.style.pointerEvents = 'none';
+                } else if (event.data === 'gameState:not_playing') {
+                    backButton.style.opacity = '1';
+                    backButton.style.pointerEvents = 'auto';
+                }
+            });
         });
     </script>
 </body>

@@ -274,8 +274,17 @@ function update() {
     }
 }
 
+let lastNotifiedState = '';
+function notifyParentState() {
+    if (gameState === lastNotifiedState) return;
+    const message = gameState === 'playing' ? 'gameState:playing' : 'gameState:not_playing';
+    window.parent.postMessage(message, '*');
+    lastNotifiedState = gameState;
+}
+
 function gameLoop() {
     update();
+    notifyParentState();
     currentLang = localStorage.getItem('sushicious_lang') || 'en';
     if (gameState === 'start') {
         drawStartScreen();
