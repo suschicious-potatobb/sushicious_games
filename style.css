@@ -46,20 +46,33 @@ a:hover {
 header {
     background: rgba(15, 15, 15, 0.95);
     backdrop-filter: blur(12px);
-    padding: 1.2rem 5%;
+    padding: 1rem 5%;
     position: sticky;
     top: 0;
     z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid var(--primary-color); /* Added a distinct red underline */
+    border-bottom: 2px solid var(--primary-color);
 }
 
 .nav-right {
     display: flex;
     align-items: center;
     gap: 1.5rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.nav-links a {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
 }
 
 .lang-toggle {
@@ -304,40 +317,73 @@ footer {
 /* Responsive Styles */
 @media (max-width: 768px) {
     header {
-        padding: 0.8rem 5%;
+        padding: 0.6rem 3%;
+        flex-direction: column;
+        gap: 0.6rem;
+        height: auto;
     }
 
     .logo {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
 
     .nav-right {
+        width: 100%;
+        justify-content: center;
         gap: 0.8rem;
     }
 
-    .lang-toggle {
-        padding: 4px 12px;
+    .nav-links {
+        gap: 0.8rem;
+    }
+
+    .nav-links a {
         font-size: 0.75rem;
-        white-space: nowrap;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    }
+
+    .lang-toggle {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        height: 28px;
+    }
+
+    .x-share-btn {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+    }
+
+    .x-share-btn svg {
+        width: 12px;
+        height: 12px;
     }
 
     .hero {
-        padding: 4rem 5%;
+        padding: 3rem 5%;
     }
 
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
 
     .hero p {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
     
     .footer-links {
-        gap: 1rem;
+        gap: 0.8rem;
+    }
+
+    #game-list {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .game-info {
+        padding: 1.2rem;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+        margin-bottom: 2rem;
     }
 }
