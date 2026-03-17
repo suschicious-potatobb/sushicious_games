@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             id: 'first-game',
             title: '寿司タップ',
-            thumbnail: 'path/to/thumbnail.png' // 後で適切なパスに置き換えます
+            thumbnail: 'games/first-game/thumbnail.svg'
         }
     ];
 
@@ -15,10 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
         gameCard.className = 'game-card';
 
         const thumbnail = document.createElement('img');
-        // サムネイルがないので、一時的に色付きのdivで代用します
-        thumbnail.style.backgroundColor = '#ddd';
-        thumbnail.style.height = '150px';
+        thumbnail.src = game.thumbnail;
         thumbnail.alt = game.title;
+        thumbnail.style.width = '100%';
+        thumbnail.style.height = '150px';
+        thumbnail.style.objectFit = 'cover';
+        thumbnail.style.backgroundColor = '#ddd';
 
         const title = document.createElement('h3');
         title.textContent = game.title;
