@@ -9,8 +9,8 @@ const firebaseConfig = {
     projectId: "sushicious-games", 
     storageBucket: "sushicious-games.firebasestorage.app", 
     messagingSenderId: "597158694276", 
-    appId: "1:597158694276:web:28d7699f3e4ef4050d61d1", 
-    measurementId: "G-H309XJ7ST6" 
+    appId: "1:597158694276:web:1d9f150f4d73c25c0d61d1", 
+    measurementId: "G-9052LHT6N4" 
 }; 
 
 // Initialize Firebase
