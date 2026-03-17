@@ -177,15 +177,31 @@ function handleTap(event) {
     // Debounce state changes (0.3s)
     const canChangeState = (now - lastStateChange > 300);
 
-    // Prevent default behavior to avoid scrolling/zooming on mobile
-    if (event.cancelable) {
+    // Only prevent default if it's a touch event to avoid breaking mouse interactions
+    if (event.type === 'touchstart' && event.cancelable) {
         event.preventDefault();
     }
 
     const rect = canvas.getBoundingClientRect();
-    const touch = (event.touches && event.touches[0]) || (event.changedTouches && event.changedTouches[0]) || event;
-    const tapX = touch.clientX - rect.left;
-    const tapY = touch.clientY - rect.top;
+    
+    // Improved coordinate calculation for both touch and mouse
+    let clientX, clientY;
+    if (event.touches && event.touches.length > 0) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+    } else if (event.changedTouches && event.changedTouches.length > 0) {
+        clientX = event.changedTouches[0].clientX;
+        clientY = event.changedTouches[0].clientY;
+    } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
+    }
+
+    // Scale coordinates based on canvas styling vs internal resolution
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const tapX = (clientX - rect.left) * scaleX;
+    const tapY = (clientY - rect.top) * scaleY;
 
     if (gameState === 'start' && canChangeState) {
         gameState = 'playing';
