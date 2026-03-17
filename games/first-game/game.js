@@ -12,14 +12,27 @@ let targets = [];
 let targetSpeed = 2;
 
 function resizeCanvas() {
-    canvasWidth = window.innerWidth;
-    canvasHeight = window.innerHeight;
-    // Enforce a portrait aspect ratio (e.g., 9:16)
-    if (canvasWidth / canvasHeight > 9 / 16) {
-        canvasWidth = canvasHeight * (9 / 16);
+    // Get viewport size (CSS pixels)
+    let viewWidth = window.innerWidth;
+    let viewHeight = window.innerHeight;
+
+    // Default to filling the screen
+    canvasWidth = viewWidth;
+    canvasHeight = viewHeight;
+
+    // Only restrict width on desktop/landscape screens to maintain portrait ratio
+    const maxAspectRatio = 9 / 16;
+    if (viewWidth / viewHeight > maxAspectRatio) {
+        canvasWidth = viewHeight * maxAspectRatio;
     }
+
+    // Set internal resolution
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
+
+    // Ensure the canvas element fills the width/height correctly in style
+    canvas.style.width = canvasWidth + 'px';
+    canvas.style.height = canvasHeight + 'px';
 }
 
 function drawStartScreen() {
