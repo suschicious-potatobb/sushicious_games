@@ -76,7 +76,8 @@ async function fetchGlobalRanking() {
     if (isLoadingRanking) return;
     isLoadingRanking = true;
     try {
-        const q = query(collection(db, "rankings_catch"), orderBy("score", "desc"), limit(3));
+        // Use the same collection as sushitap for now, or ensure "rankings_catch" exists
+        const q = query(collection(db, "rankings"), orderBy("score", "desc"), limit(3));
         const querySnapshot = await getDocs(q);
         globalRanking = querySnapshot.docs.map(doc => doc.data());
     } catch (e) {
@@ -89,10 +90,12 @@ async function fetchGlobalRanking() {
 async function saveGlobalScore(score) {
     if (score <= 0) return;
     try {
-        await addDoc(collection(db, "rankings_catch"), {
+        // Use the same collection as sushitap for consistency unless a separate one is preferred
+        await addDoc(collection(db, "rankings"), {
             score: score,
             timestamp: serverTimestamp(),
-            userAgent: navigator.userAgent
+            userAgent: navigator.userAgent,
+            game: "sushi-catch" // Add tag to distinguish
         });
         fetchGlobalRanking();
     } catch (e) {
@@ -110,6 +113,11 @@ function saveRanking(key, score) {
     ranking.push({ score, date: new Date().toLocaleDateString() });
     ranking.sort((a, b) => b.score - a.score);
     localStorage.setItem(key, JSON.stringify(ranking.slice(0, 3)));
+    
+    // Explicitly call saveGlobalScore when local ranking is saved
+    if (key === STORAGE_KEY_ALL_TIME) {
+        saveGlobalScore(score);
+    }
 }
 
 function resize() {
@@ -272,35 +280,63 @@ function gameLoop() {
 
 // --- Events ---
 window.addEventListener('resize', resize);
-canvas.addEventListener('mousemove', (e) => {
+
+let isInputActive = false;
+function handleInput(clientX) {
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
+    const x = clientX - rect.left;
     plate.x = Math.max(0, Math.min(x - plate.width / 2, canvasWidth - plate.width));
     
-    if (gameState === 'start') {
+    if (gameState === 'start' && isInputActive) {
         gameState = 'playing';
     }
-});
+}
 
-canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    const rect = canvas.getBoundingClientRect();
-    const x = e.touches[0].clientX - rect.left;
-    plate.x = Math.max(0, Math.min(x - plate.width / 2, canvasWidth - plate.width));
-    
-    if (gameState === 'start') {
-        gameState = 'playing';
-    }
-}, { passive: false });
-
-canvas.addEventListener('mousedown', () => {
+canvas.addEventListener('mousedown', (e) => {
+    isInputActive = true;
     if (gameState === 'gameOver') {
         gameState = 'start';
         score = 0;
         lives = 3;
         sushis = [];
         fetchGlobalRanking();
+    } else {
+        handleInput(e.clientX);
     }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (isInputActive || gameState === 'playing') {
+        handleInput(e.clientX);
+    }
+});
+
+window.addEventListener('mouseup', () => {
+    isInputActive = false;
+});
+
+canvas.addEventListener('touchstart', (e) => {
+    isInputActive = true;
+    if (gameState === 'gameOver') {
+        gameState = 'start';
+        score = 0;
+        lives = 3;
+        sushis = [];
+        fetchGlobalRanking();
+    } else {
+        handleInput(e.touches[0].clientX);
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (isInputActive || gameState === 'playing') {
+        handleInput(e.touches[0].clientX);
+    }
+}, { passive: false });
+
+window.addEventListener('touchend', () => {
+    isInputActive = false;
 });
 
 resize();
