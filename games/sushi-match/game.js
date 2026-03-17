@@ -72,9 +72,11 @@ async function fetchGlobalRanking() {
     if (isLoadingRanking) return;
     isLoadingRanking = true;
     try {
+        console.log("Fetching from: rankings_match");
         const q = query(collection(db, "rankings_match"), orderBy("score", "desc"), limit(3));
         const querySnapshot = await getDocs(q);
         globalRanking = querySnapshot.docs.map(doc => doc.data());
+        console.log("Fetched rankings:", globalRanking);
     } catch (e) {
         console.error("Error fetching ranking: ", e);
     } finally {
@@ -85,6 +87,7 @@ async function fetchGlobalRanking() {
 async function saveGlobalScore(score) {
     if (score <= 0) return;
     try {
+        console.log("Saving score to: rankings_match", score);
         await addDoc(collection(db, "rankings_match"), {
             score: score,
             timestamp: serverTimestamp(),

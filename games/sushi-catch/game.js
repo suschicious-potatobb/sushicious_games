@@ -76,9 +76,11 @@ async function fetchGlobalRanking() {
     if (isLoadingRanking) return;
     isLoadingRanking = true;
     try {
+        console.log("Fetching from: rankings_catch");
         const q = query(collection(db, "rankings_catch"), orderBy("score", "desc"), limit(3));
         const querySnapshot = await getDocs(q);
         globalRanking = querySnapshot.docs.map(doc => doc.data());
+        console.log("Fetched rankings:", globalRanking);
     } catch (e) {
         console.error("Error fetching ranking: ", e);
     } finally {
@@ -89,6 +91,7 @@ async function fetchGlobalRanking() {
 async function saveGlobalScore(score) {
     if (score <= 0) return;
     try {
+        console.log("Saving score to: rankings_catch", score);
         await addDoc(collection(db, "rankings_catch"), {
             score: score,
             timestamp: serverTimestamp(),
@@ -165,7 +168,6 @@ function update() {
             if (lives <= 0) {
                 gameState = 'gameOver';
                 saveRanking(STORAGE_KEY_ALL_TIME, score);
-                saveGlobalScore(score);
             }
         }
     }
