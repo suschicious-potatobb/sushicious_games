@@ -157,6 +157,11 @@ function draw() {
     ctx.fillStyle = '#0f0f0f';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
+    // Draw Border
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(0, 0, canvasWidth, canvasHeight);
+
     // Draw Grid
     const padding = 20;
     const cardSize = (canvasWidth - padding * (GRID_SIZE + 1)) / GRID_SIZE;

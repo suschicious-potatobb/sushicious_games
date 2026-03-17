@@ -167,6 +167,11 @@ function drawStartScreen() {
     ctx.fillStyle = '#0f0f0f';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
+    // Draw Border
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(0, 0, canvasWidth, canvasHeight);
+    
     ctx.fillStyle = '#ff3e3e';
     ctx.font = 'bold 44px sans-serif';
     ctx.textAlign = 'center';
