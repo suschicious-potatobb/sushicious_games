@@ -76,8 +76,7 @@ async function fetchGlobalRanking() {
     if (isLoadingRanking) return;
     isLoadingRanking = true;
     try {
-        // Use the same collection as sushitap for now, or ensure "rankings_catch" exists
-        const q = query(collection(db, "rankings"), orderBy("score", "desc"), limit(3));
+        const q = query(collection(db, "rankings_catch"), orderBy("score", "desc"), limit(3));
         const querySnapshot = await getDocs(q);
         globalRanking = querySnapshot.docs.map(doc => doc.data());
     } catch (e) {
@@ -90,12 +89,10 @@ async function fetchGlobalRanking() {
 async function saveGlobalScore(score) {
     if (score <= 0) return;
     try {
-        // Use the same collection as sushitap for consistency unless a separate one is preferred
-        await addDoc(collection(db, "rankings"), {
+        await addDoc(collection(db, "rankings_catch"), {
             score: score,
             timestamp: serverTimestamp(),
-            userAgent: navigator.userAgent,
-            game: "sushi-catch" // Add tag to distinguish
+            userAgent: navigator.userAgent
         });
         fetchGlobalRanking();
     } catch (e) {

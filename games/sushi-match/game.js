@@ -72,7 +72,7 @@ async function fetchGlobalRanking() {
     if (isLoadingRanking) return;
     isLoadingRanking = true;
     try {
-        const q = query(collection(db, "rankings"), orderBy("score", "desc"), limit(3));
+        const q = query(collection(db, "rankings_match"), orderBy("score", "desc"), limit(3));
         const querySnapshot = await getDocs(q);
         globalRanking = querySnapshot.docs.map(doc => doc.data());
     } catch (e) {
@@ -85,11 +85,10 @@ async function fetchGlobalRanking() {
 async function saveGlobalScore(score) {
     if (score <= 0) return;
     try {
-        await addDoc(collection(db, "rankings"), {
+        await addDoc(collection(db, "rankings_match"), {
             score: score,
             timestamp: serverTimestamp(),
-            userAgent: navigator.userAgent,
-            game: "sushi-match"
+            userAgent: navigator.userAgent
         });
         fetchGlobalRanking();
     } catch (e) {
