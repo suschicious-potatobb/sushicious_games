@@ -9,12 +9,12 @@ let gameState = 'start'; // 'start', 'playing', 'gameOver'
 // --- Game Objects ---
 let player = { x: 0, y: 0, size: 50 }; // Represents the player's tap
 let targets = [];
-let targetSpeed = 2;
+let targetSpeed = 3;
 
 function resizeCanvas() {
     // Get viewport size (CSS pixels)
-    let viewWidth = window.innerWidth;
-    let viewHeight = window.innerHeight;
+    let viewWidth = window.innerWidth || 300;
+    let viewHeight = window.innerHeight || 500;
 
     // Default to filling the screen
     canvasWidth = viewWidth;
@@ -23,16 +23,20 @@ function resizeCanvas() {
     // Only restrict width on desktop/landscape screens to maintain portrait ratio
     const maxAspectRatio = 9 / 16;
     if (viewWidth / viewHeight > maxAspectRatio) {
-        canvasWidth = viewHeight * maxAspectRatio;
+        canvasWidth = Math.floor(viewHeight * maxAspectRatio);
     }
 
-    // Set internal resolution
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+    // Ensure we have a valid size
+    canvasWidth = Math.max(200, canvasWidth);
+    canvasHeight = Math.max(300, canvasHeight);
+
+    // Set internal resolution (use Math.floor for safety)
+    canvas.width = Math.floor(canvasWidth);
+    canvas.height = Math.floor(canvasHeight);
 
     // Ensure the canvas element fills the width/height correctly in style
-    canvas.style.width = canvasWidth + 'px';
-    canvas.style.height = canvasHeight + 'px';
+    canvas.style.width = canvas.width + 'px';
+    canvas.style.height = canvas.height + 'px';
 }
 
 function drawStartScreen() {
@@ -46,17 +50,49 @@ function drawStartScreen() {
     ctx.fillText('タップしてスタート', canvasWidth / 2, canvasHeight / 2);
 }
 
+// --- Drawing Helpers ---
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+    if (ctx.roundRect) {
+        ctx.roundRect(x, y, width, height, radius);
+    } else {
+        // Fallback for older browsers
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+    }
+}
+
 function drawGameScreen() {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     // Draw targets
     targets.forEach(target => {
-        if (assetsLoaded) {
-            ctx.drawImage(sushiImage, target.x - target.size / 2, target.y - target.size / 2, target.size, target.size);
+        // Shari (Rice) - White oval
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        if (ctx.ellipse) {
+            ctx.ellipse(target.x, target.y + 10, target.size / 2, target.size / 3, 0, 0, Math.PI * 2);
         } else {
-            ctx.fillStyle = 'red'; // Fallback if image not loaded
-            ctx.fillRect(target.x - target.size / 2, target.y - target.size / 2, target.size, target.size);
+            // Fallback for very old browsers: simple circle
+            ctx.arc(target.x, target.y + 10, target.size / 2.5, 0, Math.PI * 2);
         }
+        ctx.fill();
+        ctx.strokeStyle = '#ccc';
+        ctx.stroke();
+
+        // Neta (Topping) - Red rectangle
+        ctx.fillStyle = 'red';
+        ctx.beginPath();
+        drawRoundedRect(ctx, target.x - target.size / 2, target.y - target.size / 4, target.size, target.size / 2, 5);
+        ctx.fill();
     });
 
     // Draw score
@@ -64,19 +100,25 @@ function drawGameScreen() {
     ctx.font = '32px sans-serif';
     ctx.textAlign = 'left';
     ctx.fillText(`スコア: ${score}`, 10, 40);
+
+    // DEBUG info (Temporary)
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`W:${canvas.width} H:${canvas.height} T:${targets.length} S:${gameState}`, 10, 60);
 }
 
 function drawGameOverScreen() {
-    ctx.fillStyle = 'rgba(51, 51, 51, 0.8)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.fillStyle = 'white';
-    ctx.font = '48px sans-serif';
+    ctx.font = 'bold 40px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('ゲームオーバー', canvasWidth / 2, canvasHeight / 3);
-    ctx.font = '32px sans-serif';
-    ctx.fillText(`最終スコア: ${score}`, canvasWidth / 2, canvasHeight / 2);
     ctx.font = '24px sans-serif';
-    ctx.fillText('タップしてリトライ', canvasWidth / 2, canvasHeight * 2 / 3);
+    ctx.fillText(`スコア: ${score}`, canvasWidth / 2, canvasHeight / 2);
+    ctx.fillStyle = '#ffcc00';
+    ctx.fillText('タップしてリトライ', canvasWidth / 2, canvasHeight * 0.7);
 }
 
 function update() {
@@ -87,21 +129,28 @@ function update() {
         target.y += targetSpeed;
     });
 
-    // Remove targets that are off-screen
-    targets = targets.filter(target => target.y < canvasHeight + 50);
-
     // Add new targets periodically
-    if (Math.random() < 0.03) {
+    // Increased spawn rate slightly for testing (0.04)
+    if (Math.random() < 0.04) {
+        // Ensure targets are within canvas width (with margin)
+        const size = 50 + Math.random() * 30;
         targets.push({
-            x: Math.random() * canvasWidth,
-            y: -50,
-            size: 50 + Math.random() * 30
+            x: size/2 + Math.random() * (canvasWidth - size),
+            y: -size,
+            size: size
         });
     }
     
-    // Check for game over (e.g., if a target reaches the bottom)
-    if (targets.some(t => t.y > canvasHeight)) {
+    // Check for game over (target falls below bottom)
+    // Add some buffer (50px) so it doesn't end too abruptly
+    if (targets.some(t => t.y > canvasHeight + 50)) {
         gameState = 'gameOver';
+        lastStateChange = Date.now();
+    }
+
+    // Remove targets that are definitely off-screen to keep the array small
+    if (targets.length > 50) {
+        targets = targets.filter(t => t.y < canvasHeight + 100);
     }
 }
 
@@ -121,16 +170,28 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
+let lastStateChange = 0;
+
 function handleTap(event) {
+    const now = Date.now();
+    // Debounce state changes (0.3s)
+    const canChangeState = (now - lastStateChange > 300);
+
+    // Prevent default behavior to avoid scrolling/zooming on mobile
+    if (event.cancelable) {
+        event.preventDefault();
+    }
+
     const rect = canvas.getBoundingClientRect();
-    const touch = event.touches ? event.touches[0] : event;
+    const touch = (event.touches && event.touches[0]) || (event.changedTouches && event.changedTouches[0]) || event;
     const tapX = touch.clientX - rect.left;
     const tapY = touch.clientY - rect.top;
 
-    if (gameState === 'start') {
+    if (gameState === 'start' && canChangeState) {
         gameState = 'playing';
         score = 0;
         targets = [];
+        lastStateChange = now;
     } else if (gameState === 'playing') {
         // Check if a target was tapped
         targets.forEach((target, index) => {
@@ -140,16 +201,19 @@ function handleTap(event) {
                 score++;
             }
         });
-    } else if (gameState === 'gameOver') {
+    } else if (gameState === 'gameOver' && canChangeState) {
         gameState = 'start';
+        lastStateChange = now;
     }
 }
 
 // --- Event Listeners ---
 window.addEventListener('resize', resizeCanvas, false);
-canvas.addEventListener('touchstart', handleTap, false);
+canvas.addEventListener('touchstart', handleTap, { passive: false });
 canvas.addEventListener('mousedown', handleTap, false); // For desktop testing
 
 // --- Initialisation ---
+console.log('Game Initializing...');
 resizeCanvas();
+console.log('Canvas Size:', canvasWidth, 'x', canvasHeight);
 gameLoop();
