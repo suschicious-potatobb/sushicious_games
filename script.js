@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const games = [
         {
             id: 'first-game',
-            title: '寿司タップ',
+            title: 'Sushi Tap',
+            tag: 'Action',
             thumbnail: 'games/first-game/thumbnail.svg'
         }
     ];
@@ -14,19 +15,16 @@ document.addEventListener('DOMContentLoaded', () => {
         gameCard.href = `game-frame.html?game=${game.id}`;
         gameCard.className = 'game-card';
 
-        const thumbnail = document.createElement('img');
-        thumbnail.src = game.thumbnail;
-        thumbnail.alt = game.title;
-        thumbnail.style.width = '100%';
-        thumbnail.style.height = '150px';
-        thumbnail.style.objectFit = 'cover';
-        thumbnail.style.backgroundColor = '#ddd';
+        gameCard.innerHTML = `
+            <div class="thumbnail-container">
+                <img src="${game.thumbnail}" alt="${game.title}" loading="lazy">
+            </div>
+            <div class="game-info">
+                <span class="game-tag">${game.tag}</span>
+                <h3>${game.title}</h3>
+            </div>
+        `;
 
-        const title = document.createElement('h3');
-        title.textContent = game.title;
-
-        gameCard.appendChild(thumbnail);
-        gameCard.appendChild(title);
         gameList.appendChild(gameCard);
     });
 });

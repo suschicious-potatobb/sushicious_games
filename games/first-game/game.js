@@ -6,6 +6,34 @@ let canvasWidth, canvasHeight;
 let score = 0;
 let gameState = 'start'; // 'start', 'playing', 'gameOver'
 
+// --- Ranking Configuration ---
+const STORAGE_KEY_ALL_TIME = 'sushicious_all_time_rank';
+const STORAGE_KEY_DAILY = 'sushicious_daily_rank';
+
+function getRanking(key) {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+}
+
+function saveRanking(key, score) {
+    let ranking = getRanking(key);
+    const today = new Date().toLocaleDateString();
+    
+    // For daily rank, check if the data is from today
+    if (key === STORAGE_KEY_DAILY) {
+        const lastDate = localStorage.getItem(key + '_date');
+        if (lastDate !== today) {
+            ranking = [];
+            localStorage.setItem(key + '_date', today);
+        }
+    }
+
+    ranking.push({ score, date: today, timestamp: Date.now() });
+    ranking.sort((a, b) => b.score - a.score);
+    ranking = ranking.slice(0, 3); // Keep only top 3
+    localStorage.setItem(key, JSON.stringify(ranking));
+}
+
 // --- Game Objects ---
 let player = { x: 0, y: 0, size: 50 }; // Represents the player's tap
 let targets = [];
@@ -100,25 +128,50 @@ function drawGameScreen() {
     ctx.font = '32px sans-serif';
     ctx.textAlign = 'left';
     ctx.fillText(`スコア: ${score}`, 10, 40);
-
-    // DEBUG info (Temporary)
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.font = '12px monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText(`W:${canvas.width} H:${canvas.height} T:${targets.length} S:${gameState}`, 10, 60);
 }
 
 function drawGameOverScreen() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    
     ctx.fillStyle = 'white';
     ctx.font = 'bold 40px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('ゲームオーバー', canvasWidth / 2, canvasHeight / 3);
-    ctx.font = '24px sans-serif';
-    ctx.fillText(`スコア: ${score}`, canvasWidth / 2, canvasHeight / 2);
+    ctx.fillText('GAME OVER', canvasWidth / 2, canvasHeight * 0.15);
+    
     ctx.fillStyle = '#ffcc00';
-    ctx.fillText('タップしてリトライ', canvasWidth / 2, canvasHeight * 0.7);
+    ctx.font = 'bold 48px sans-serif';
+    ctx.fillText(score, canvasWidth / 2, canvasHeight * 0.25);
+    ctx.font = '20px sans-serif';
+    ctx.fillText('SCORE', canvasWidth / 2, canvasHeight * 0.3);
+
+    // Rankings
+    const allTime = getRanking(STORAGE_KEY_ALL_TIME);
+    const daily = getRanking(STORAGE_KEY_DAILY);
+
+    const drawRank = (title, list, yStart) => {
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.fillText(title, canvasWidth / 2, yStart);
+        
+        ctx.font = '18px monospace';
+        if (list.length === 0) {
+            ctx.fillStyle = '#999';
+            ctx.fillText('-', canvasWidth / 2, yStart + 30);
+        } else {
+            list.forEach((item, i) => {
+                ctx.fillStyle = i === 0 ? '#ffd700' : (i === 1 ? '#c0c0c0' : (i === 2 ? '#cd7f32' : 'white'));
+                ctx.fillText(`${i + 1}. ${item.score} pts`, canvasWidth / 2, yStart + 30 + (i * 25));
+            });
+        }
+    };
+
+    drawRank('--- ALL TIME TOP 3 ---', allTime, canvasHeight * 0.4);
+    drawRank('--- TODAY TOP 3 ---', daily, canvasHeight * 0.65);
+
+    ctx.fillStyle = 'white';
+    ctx.font = '20px sans-serif';
+    ctx.fillText('Tap to Retry', canvasWidth / 2, canvasHeight * 0.9);
 }
 
 function update() {
@@ -145,6 +198,8 @@ function update() {
     // Add some buffer (50px) so it doesn't end too abruptly
     if (targets.some(t => t.y > canvasHeight + 50)) {
         gameState = 'gameOver';
+        saveRanking(STORAGE_KEY_ALL_TIME, score);
+        saveRanking(STORAGE_KEY_DAILY, score);
         lastStateChange = Date.now();
     }
 
