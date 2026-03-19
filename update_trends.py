@@ -2,6 +2,7 @@ import os
 import datetime
 import json
 import re
+import tweepy
 from openai import OpenAI
 
 # OpenAI APIを使用してトレンド情報を生成する
@@ -55,6 +56,31 @@ def get_mock_trends():
         "ai": [{"title": "AIトレンド調査中", "desc": "最新のAI情報を収集しています。", "url": "#"}],
         "game": [{"title": "ゲームトレンド調査中", "desc": "最新のゲーム情報を収集しています。", "url": "#"}]
     }
+
+# X (Twitter) への投稿
+def post_to_x(trends):
+    consumer_key = os.environ.get("X_CONSUMER_KEY")
+    consumer_secret = os.environ.get("X_CONSUMER_SECRET")
+    access_token = os.environ.get("X_ACCESS_TOKEN")
+    access_token_secret = os.environ.get("X_ACCESS_TOKEN_SECRET")
+
+    if not all([consumer_key, consumer_secret, access_token, access_token_secret]):
+        print("Error: X API credentials are not set. Skipping X post.")
+        return
+
+    try:
+        # Tweepy v4+ API v2 client initialization
+        client = tweepy.Client(
+            consumer_key=consumer_key, consumer_secret=consumer_secret,
+            access_token=access_token, access_token_secret=access_token_secret
+        )
+
+        tweet_text = f"【{trends['date']} トレンド情報】\n\n{trends['summary']}\n\n最新のゲーム・AIトレンドはこちら🍣\nhttps://sushicious-games.web.app/trends.html\n\n#SushiciousGames #AI #Gaming"
+        
+        response = client.create_tweet(text=tweet_text)
+        print(f"Successfully posted to X: {response.data['id']}")
+    except Exception as e:
+        print(f"Error posting to X: {e}")
 
 def update_html(trends):
     # Update trends.html
@@ -123,3 +149,4 @@ def update_html(trends):
 if __name__ == "__main__":
     latest_trends = get_latest_trends()
     update_html(latest_trends)
+    post_to_x(latest_trends)
