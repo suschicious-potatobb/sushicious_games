@@ -1,6 +1,7 @@
 import os
 import datetime
 import json
+import re
 from openai import OpenAI
 
 # OpenAI APIを使用してトレンド情報を生成する
@@ -56,16 +57,13 @@ def get_mock_trends():
     }
 
 def update_html(trends):
-    file_path = "trends.html"
-    if not os.path.exists(file_path):
-        print(f"Error: {file_path} not found.")
-        return
+    # Update trends.html
+    trends_file = "trends.html"
+    if os.path.exists(trends_file):
+        with open(trends_file, "r", encoding="utf-8") as f:
+            content = f.read()
 
-    with open(file_path, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    # 新しい記事のHTMLを生成
-    new_article_html = f"""
+        new_article_html = f"""
             <article class="trend-article">
                 <h2>{trends['date']}のトレンド</h2>
                 <p class="summary">{trends['summary']}</p>
@@ -74,45 +72,53 @@ def update_html(trends):
                     <h3>AI トレンド</h3>
                     <ul>
 """
-    for item in trends['ai']:
-        new_article_html += f"""                        <li>
+        for item in trends['ai']:
+            new_article_html += f"""                        <li>
                             <h4>{item['title']}</h4>
                             <p>{item['desc']}<br><a href="{item['url']}" target="_blank">参照元</a></p>
                         </li>
 """
-    new_article_html += """                    </ul>
+        new_article_html += """                    </ul>
                 </section>
 
                 <section class="trend-category">
                     <h3>ゲーム トレンド</h3>
                     <ul>
 """
-    for item in trends['game']:
-        new_article_html += f"""                        <li>
+        for item in trends['game']:
+            new_article_html += f"""                        <li>
                             <h4>{item['title']}</h4>
                             <p>{item['desc']}<br><a href="{item['url']}" target="_blank">参照元</a></p>
                         </li>
 """
-    new_article_html += """                    </ul>
+        new_article_html += """                    </ul>
                 </section>
             </article>
 """
+        container_tag = '<div id="trends-container">'
+        if container_tag in content:
+            updated_content = content.replace(container_tag, container_tag + new_article_html)
+            archive_tag = '<!-- 過去記事へのリンクが追加されていきます -->'
+            new_archive_item = f'<li><a href="#">{trends["date"]}</a></li>\n                    '
+            updated_content = updated_content.replace(archive_tag, new_archive_item + archive_tag)
+            with open(trends_file, "w", encoding="utf-8") as f:
+                f.write(updated_content)
+            print(f"Successfully updated {trends_file}")
 
-    # trends-containerの直後に新しい記事を挿入
-    container_tag = '<div id="trends-container">'
-    if container_tag in content:
-        updated_content = content.replace(container_tag, container_tag + new_article_html)
+    # Update index.html summary
+    index_file = "index.html"
+    if os.path.exists(index_file):
+        with open(index_file, "r", encoding="utf-8") as f:
+            index_content = f.read()
         
-        # アーカイブの更新（簡易版：最新の日付を追加）
-        archive_tag = '<!-- 過去記事へのリンクが追加されていきます -->'
-        new_archive_item = f'<li><a href="#">{trends["date"]}</a></li>\n                    '
-        updated_content = updated_content.replace(archive_tag, new_archive_item + archive_tag)
-
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(updated_content)
-        print(f"Successfully updated {file_path} with trends for {trends['date']}")
-    else:
-        print("Error: Could not find trends-container in HTML.")
+        # Use regex to replace the summary inside trends-summary-container
+        pattern = r'(<div id="trends-summary-container">)\s*<p class="trends-summary">.*?</p>'
+        replacement = f'\\1\n                <p class="trends-summary">{trends["summary"]}</p>'
+        new_index_content = re.sub(pattern, replacement, index_content, flags=re.DOTALL)
+        
+        with open(index_file, "w", encoding="utf-8") as f:
+            f.write(new_index_content)
+        print(f"Successfully updated {index_file} summary")
 
 if __name__ == "__main__":
     latest_trends = get_latest_trends()

@@ -47,7 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
             sushi_match_rule_3: "The time taken to clear all cards is recorded. Aim for the fastest time!",
             sushi_match_tips: "The shortcut to clearing the game is to remember the locations of the cards you've flipped rather than rushing. Also, be careful with similar-looking ingredients (like tuna and fatty tuna) and match the pairs accurately. Repeated play improves your memory and speed.",
             trends_title: "Game & AI Trends",
-            trends_subtitle: "Daily updates on the latest topics in Gaming and Artificial Intelligence."
+            trends_subtitle: "Daily updates on the latest topics in Gaming and Artificial Intelligence.",
+            latest_trends_title: "Today's Trends",
+            view_all_trends: "View All Trends"
         },
         ja: {
             nav_games: "ゲーム一覧",
@@ -92,7 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
             sushi_match_rule_3: "全てのカードを消すまでのクリアタイムが記録されます。最速を目指しましょう！",
             sushi_match_tips: "焦ってめくるよりも、一度めくったカードの場所をしっかりと覚えることがクリアへの近道です。また、似たような色のネタ（マグロとトロなど）に注意して、正確にペアを揃えていきましょう。繰り返しプレイすることで、記憶力とスピードが向上します。",
             trends_title: "ゲームとAIのトレンド",
-            trends_subtitle: "ゲームと人工知能に関する最新のトピックを毎日更新します。"
+            trends_subtitle: "ゲームと人工知能に関する最新のトピックを毎日更新します。",
+            latest_trends_title: "今日のトレンド",
+            view_all_trends: "トレンド記事一覧を見る"
         }
     };
 
