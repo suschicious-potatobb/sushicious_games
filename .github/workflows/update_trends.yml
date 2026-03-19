@@ -40,5 +40,9 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add trends.html index.html
         git commit -m "docs: update daily trends [skip ci]" || echo "No changes to commit"
-        git pull origin main --rebase
-        git push
+        if [ -z "$NO_CHANGES" ]; then
+          git pull origin main --rebase
+          git push
+        else
+          echo "No changes to commit, skipping pull and push."
+        fi
