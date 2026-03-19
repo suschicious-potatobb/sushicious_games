@@ -3,49 +3,51 @@ import datetime
 import json
 import re
 import tweepy
-from openai import OpenAI
+import google.generativeai as genai
 
-# OpenAI APIを使用してトレンド情報を生成する
+# Google Gemini APIを使用してトレンド情報を生成する
 def get_latest_trends():
-    api_key = os.environ.get("OPENAI_API_KEY")
+    api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        print("Error: OPENAI_API_KEY is not set.")
-        # fallback to mock data if API key is missing
+        print("Error: GEMINI_API_KEY is not set.")
         return get_mock_trends()
 
-    client = OpenAI(api_key=api_key)
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel('gemini-1.5-flash')
     today = datetime.date.today().strftime("%Y年%m月%d日")
 
     prompt = f"""
 あなたは「Sushicious Games」の専属トレンドリサーチャーです。
-「ゲーム業界」と「AI業界」の最新トレンド（本日2026年3月19日時点）を調査し、以下のJSON形式で出力してください。
+「ゲーム業界」と「AI業界」の最新トレンド（本日{today}時点）を調査し、以下のJSON形式で出力してください。
 
 # Rules
 - 言語は日本語。
 - summaryは今日のトレンド全体を1文で。
 - titleは15文字以内、descは60文字以内。
 - 実在するニュースのURLを含めること。
-- 出力は純粋なJSONのみ。
+- 出力は純粋なJSONのみ。マークダウンのバッククォートなどは含めないでください。
 
 # Output Format (JSON)
 {{
   "date": "{today}",
   "summary": "...",
-  "ai": [{{ "title": "...", "desc": "...", "url": "..." }}, ...],
-  "game": [{{ "title": "...", "desc": "...", "url": "..." }}, ...]
+  "ai": [{{ "title": "...", "desc": "...", "url": "..." }}],
+  "game": [{{ "title": "...", "desc": "...", "url": "..." }}]
 }}
 """
 
     try:
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": prompt}],
-            response_format={ "type": "json_object" }
-        )
-        trends_json = response.choices[0].message.content
+        response = model.generate_content(prompt)
+        # Extract JSON from the response text, removing markdown backticks if present
+        json_text = re.search(r'```json\n(.*?)\n```', response.text, re.DOTALL)
+        if json_text:
+            trends_json = json_text.group(1)
+        else:
+            trends_json = response.text
+        
         return json.loads(trends_json)
     except Exception as e:
-        print(f"Error calling OpenAI API: {e}")
+        print(f"Error calling Gemini API: {e}")
         return get_mock_trends()
 
 def get_mock_trends():
