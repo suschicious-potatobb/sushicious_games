@@ -37,7 +37,7 @@ def get_latest_trends():
 
     try:
         response = client.models.generate_content(
-            model='gemini-pro',
+            model='gemini-3.1-pro-preview',
             contents=prompt,
             config={'response_mime_type': 'application/json'}
         )
