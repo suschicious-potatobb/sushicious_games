@@ -25,7 +25,26 @@ document.addEventListener('DOMContentLoaded', () => {
             game_sushi_catch_title: "Sushi Catch",
             game_sushi_catch_desc: "Catch falling sushi on your plate!",
             game_sushi_match_title: "Sushi Match",
-            game_sushi_match_desc: "Match the pairs of sushi as fast as you can!"
+            game_sushi_match_desc: "Match the pairs of sushi as fast as you can!",
+            nav_home: "Home",
+            about_game: "About this game",
+            how_to_play: "How to play",
+            pro_tips: "Pro Tips",
+            sushi_tap_desc_long: "Sushi Tap is a simple yet addictive action game where you tap sushi falling from the top of the screen to see how high a score you can get within the time limit. Experience the exhilarating gameplay themed around Sushi, Japan's traditional food culture.",
+            sushi_tap_rule_1: "Tap the sushi falling from the top with your finger (or mouse).",
+            sushi_tap_rule_2: "Successful taps add to your score.",
+            sushi_tap_rule_3: "Try to tap as many sushi as possible without missing to reach the high score!",
+            sushi_tap_tips: "The key is to tap rhythmically before the sushi reaches the bottom of the screen. Especially when the speed increases, it's important to stay calm and hit the targets accurately. Challenge yourself and aim for the top of the world rankings!",
+            sushi_catch_desc_long: "Sushi Catch is an action game where you move a plate at the bottom to catch sushi falling from the top of the screen. Catch the falling ingredients without missing to aim for a high score. It's a simple yet exciting game that tests your concentration as the speed increases.",
+            sushi_catch_rule_1: "Slide your finger or mouse left and right to move the plate.",
+            sushi_catch_rule_2: "Catching falling sushi within the plate adds to your score.",
+            sushi_catch_rule_3: "Be careful not to miss any sushi and aim for combos!",
+            sushi_catch_tips: "The falling speed of the sushi increases gradually. Keeping the plate near the center of the screen allows you to react quickly whether the sushi falls to the left or right. Staying calm and moving accurately is the shortcut to a high score.",
+            sushi_match_desc_long: "Sushi Match is a memory puzzle game where you find pairs of identical sushi from a shuffled set. Compete for the time it takes to clear all pairs. Have fun activating your brain while looking at delicious sushi. Easy for everyone from children to adults to enjoy.",
+            sushi_match_rule_1: "Flip over the face-down cards to find pairs of identical sushi.",
+            sushi_match_rule_2: "You can flip up to two cards at a time. If the ingredients match, the cards disappear.",
+            sushi_match_rule_3: "The time taken to clear all cards is recorded. Aim for the fastest time!",
+            sushi_match_tips: "The shortcut to clearing the game is to remember the locations of the cards you've flipped rather than rushing. Also, be careful with similar-looking ingredients (like tuna and fatty tuna) and match the pairs accurately. Repeated play improves your memory and speed."
         },
         ja: {
             nav_games: "ゲーム一覧",
@@ -48,7 +67,26 @@ document.addEventListener('DOMContentLoaded', () => {
             game_sushi_catch_title: "寿司キャッチ",
             game_sushi_catch_desc: "お皿を動かして落ちてくる寿司をキャッチしよう！",
             game_sushi_match_title: "寿司マッチ",
-            game_sushi_match_desc: "同じ寿司のペアを素早く揃えよう！"
+            game_sushi_match_desc: "同じ寿司のペアを素早く揃えよう！",
+            nav_home: "ホーム",
+            about_game: "このゲームについて",
+            how_to_play: "遊び方",
+            pro_tips: "攻略のコツ",
+            sushi_tap_desc_long: "「寿司タップ」は、画面の上から次々と落ちてくるお寿司をタップして、制限時間内にどれだけ高いスコアを出せるかを競う、シンプルながらも中毒性の高いアクションゲームです。日本の伝統的な食文化である「寿司」をテーマにした、爽快感あふれるプレイ体験を楽しめます。",
+            sushi_tap_rule_1: "上から落ちてくる寿司を指（またはマウス）でタップしてください。",
+            sushi_tap_rule_2: "タップに成功するとスコアが加算されます。",
+            sushi_tap_rule_3: "一度にたくさんの寿司を逃さずタップして、ハイスコアを目指しましょう！",
+            sushi_tap_tips: "寿司が画面の下端に到達する前に、リズムよくタップするのがポイントです。特にスピードが上がってきたときは、焦らずに正確にターゲットを捉えることが重要です。何度も挑戦して、世界ランキングのトップを目指しましょう！",
+            sushi_catch_desc_long: "「寿司キャッチ」は、画面上部から次々と落ちてくる寿司を、下にあるお皿を動かして上手にキャッチするアクションゲームです。次々に落ちてくるネタを逃さず受け止めて、ハイスコアを目指しましょう。シンプルながらも、スピードが上がると集中力が試されるエキサイティングなゲームです。",
+            sushi_catch_rule_1: "マウス、または指で画面を左右にスライドして、お皿を移動させてください。",
+            sushi_catch_rule_2: "落ちてくる寿司をお皿の範囲内でキャッチすると、スコアが加算されます。",
+            sushi_catch_rule_3: "寿司を逃さないように注意して、コンボを狙いましょう！",
+            sushi_catch_tips: "寿司が落ちる速度は徐々に速くなっていきます。常に画面中央付近にお皿を置いておくことで、左右どちらに寿司が落ちてきても素早く対応できるようになります。焦らず正確に移動させることがハイスコアへの近道です。",
+            sushi_match_desc_long: "「寿司マッチ」は、バラバラに並べられたお寿司の中から、同じネタのペアを見つけ出す記憶力パズルゲームです。全てのペアを揃えるまでの時間を競います。美味しそうなお寿司を眺めながら、楽しく脳を活性化させましょう。お子様から大人まで、どなたでも手軽に楽しめます。",
+            sushi_match_rule_1: "伏せられたカードをめくって、同じお寿司のペアを探してください。",
+            sushi_match_rule_2: "一度にめくれるのは2枚までです。ネタが一致すればカードは消えます。",
+            sushi_match_rule_3: "全てのカードを消すまでのクリアタイムが記録されます。最速を目指しましょう！",
+            sushi_match_tips: "焦ってめくるよりも、一度めくったカードの場所をしっかりと覚えることがクリアへの近道です。また、似たような色のネタ（マグロとトロなど）に注意して、正確にペアを揃えていきましょう。繰り返しプレイすることで、記憶力とスピードが向上します。"
         }
     };
 
@@ -73,18 +111,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const games = [
         {
             id: 'first-game',
+            url: 'sushi-tap.html',
             titleKey: 'game_sushi_tap_title',
             tagKey: 'game_tag_action',
             thumbnail: 'games/first-game/thumbnail.svg'
         },
         {
             id: 'sushi-catch',
+            url: 'sushi-catch.html',
             titleKey: 'game_sushi_catch_title',
             tagKey: 'game_tag_catch',
             thumbnail: 'games/sushi-catch/thumbnail.svg'
         },
         {
             id: 'sushi-match',
+            url: 'sushi-match.html',
             titleKey: 'game_sushi_match_title',
             tagKey: 'game_tag_puzzle',
             thumbnail: 'games/sushi-match/thumbnail.svg'
@@ -97,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         games.forEach(game => {
             const gameCard = document.createElement('a');
-            gameCard.href = `game-frame.html?game=${game.id}`;
+            gameCard.href = game.url;
             gameCard.className = 'game-card';
 
             const title = translations[currentLang][game.titleKey];

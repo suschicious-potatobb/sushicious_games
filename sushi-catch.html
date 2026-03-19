@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寿司キャッチ (Sushi Catch) | Sushicious Games</title>
+    
+    <!-- SEO & OGP -->
+    <meta name="description" content="落ちてくる寿司をお皿でキャッチしよう！「寿司キャッチ」の遊び方や攻略のコツを紹介。登録不要で今すぐ遊べるブラウザゲーム。">
+    <meta property="og:title" content="寿司キャッチ (Sushi Catch) | Sushicious Games">
+    <meta property="og:description" content="手軽に遊べるアクションゲーム「寿司キャッチ」。お皿を動かして、落ちてくる寿司を全部キャッチしよう！">
+    <meta property="og:image" content="https://sushicious-games.web.app/games/sushi-catch/thumbnail.svg">
+    <meta property="og:url" content="https://sushicious-games.web.app/sushi-catch.html">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Serif+JP:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .game-page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+        .game-frame-wrapper {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            min-height: 500px;
+            background: #000;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .game-frame-wrapper iframe {
+            flex: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+        .game-page-ad-space {
+            height: 90px;
+            background: #000;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .game-content-section {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 2rem;
+        }
+        .game-content-section h1 {
+            font-family: var(--font-jp-accent);
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+        }
+        .game-content-section h2 {
+            font-family: var(--font-jp-accent);
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .game-content-section p {
+            color: var(--text-main);
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+        }
+        .game-content-section ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        .game-content-section li {
+            margin-bottom: 0.8rem;
+            color: var(--text-main);
+        }
+        .breadcrumb {
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .breadcrumb a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .game-frame-wrapper {
+                height: 80vh;
+                min-height: 400px;
+            }
+            .game-content-section {
+                padding: 1.5rem;
+            }
+            .game-content-section h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">Sushi<span>cious</span></a>
+        <div class="nav-right">
+            <a href="https://twitter.com/intent/tweet?text=Playing%20Sushi%20Catch%20on%20Sushicious%20Games!&url=https://sushicious-games.web.app/sushi-catch.html" target="_blank" class="x-share-btn">
+                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span>X</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#games" data-i18n="nav_games">Games</a>
+                <a href="contact.html" data-i18n="nav_contact">Contact</a>
+            </div>
+            <button id="lang-toggle" class="lang-toggle">JP / EN</button>
+        </div>
+    </header>
+
+    <div class="game-page-container">
+        <nav class="breadcrumb">
+            <a href="index.html" data-i18n="nav_home">Home</a> &gt; 
+            <a href="index.html#games" data-i18n="nav_games">Games</a> &gt; 
+            <span data-i18n="game_sushi_catch_title">Sushi Catch</span>
+        </nav>
+
+        <div class="game-frame-wrapper">
+            <iframe src="games/sushi-catch/index.html" id="game-iframe"></iframe>
+            <div class="game-page-ad-space" data-i18n="advertisement">
+                Advertisement
+            </div>
+        </div>
+
+        <article class="game-content-section">
+            <h1 data-i18n="game_sushi_catch_title">Sushi Catch</h1>
+            
+            <h2 data-i18n="about_game">このゲームについて</h2>
+            <p data-i18n="sushi_catch_desc_long">「寿司キャッチ」は、画面上部から次々と落ちてくる寿司を、下にあるお皿を動かして上手にキャッチするアクションゲームです。次々に落ちてくるネタを逃さず受け止めて、ハイスコアを目指しましょう。シンプルながらも、スピードが上がると集中力が試されるエキサイティングなゲームです。</p>
+
+            <h2 data-i18n="how_to_play">遊び方</h2>
+            <ul>
+                <li data-i18n="sushi_catch_rule_1">マウス、または指で画面を左右にスライドして、お皿を移動させてください。</li>
+                <li data-i18n="sushi_catch_rule_2">落ちてくる寿司をお皿の範囲内でキャッチすると、スコアが加算されます。</li>
+                <li data-i18n="sushi_catch_rule_3">寿司を逃さないように注意して、コンボを狙いましょう！</li>
+            </ul>
+
+            <h2 data-i18n="pro_tips">攻略のコツ</h2>
+            <p data-i18n="sushi_catch_tips">寿司が落ちる速度は徐々に速くなっていきます。常に画面中央付近にお皿を置いておくことで、左右どちらに寿司が落ちてきても素早く対応できるようになります。焦らず正確に移動させることがハイスコアへの近道です。</p>
+        </article>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <a href="index.html" class="logo">Sushi<span>cious</span></a>
+            <div class="footer-links">
+                <a href="terms.html" data-i18n="footer_terms">Terms</a>
+                <a href="privacy.html" data-i18n="footer_privacy">Privacy</a>
+                <a href="contact.html" data-i18n="footer_contact">Contact</a>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2026 Sushicious Games. <span data-i18n="all_rights_reserved">All rights reserved.</span></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
