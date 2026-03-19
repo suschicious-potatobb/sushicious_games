@@ -82,20 +82,44 @@ def post_to_x(trends):
         print(f"Error posting to X: {e}")
 
 def update_html(trends):
-    today_id = "trend-" + datetime.date.today().strftime("%Y%m%d")
+    today_str = datetime.date.today().strftime("%Y%m%d")
+    today_file = f"archives/trend-{today_str}.html"
     
-    # Update trends.html
+    # 1. アーカイブ個別ファイルの作成
+    if not os.path.exists("archives"):
+        os.makedirs("archives")
+        
+    template_path = "template_archive.html"
+    if os.path.exists(template_path):
+        with open(template_path, "r", encoding="utf-8") as f:
+            template = f.read()
+        
+        ai_list_html = ""
+        for item in trends['ai']:
+            ai_list_html += f'<li><h4>{item["title"]}</h4><p>{item["desc"]}<br><a href="{item["url"]}" target="_blank">参照元</a></p></li>\n'
+            
+        game_list_html = ""
+        for item in trends['game']:
+            game_list_html += f'<li><h4>{item["title"]}</h4><p>{item["desc"]}<br><a href="{item["url"]}" target="_blank">参照元</a></p></li>\n'
+            
+        archive_content = template.replace("{{DATE}}", trends['date'])
+        archive_content = archive_content.replace("{{SUMMARY}}", trends['summary'])
+        archive_content = archive_content.replace("{{AI_LIST}}", ai_list_html)
+        archive_content = archive_content.replace("{{GAME_LIST}}", game_list_html)
+        
+        with open(today_file, "w", encoding="utf-8") as f:
+            f.write(archive_content)
+        print(f"Created archive file: {today_file}")
+
+    # 2. trends.html の更新（最新記事の差し替え + サイドバーの更新）
     trends_file = "trends.html"
     if os.path.exists(trends_file):
         with open(trends_file, "r", encoding="utf-8") as f:
             content = f.read()
 
-        # 重複チェック: すでに同じIDの記事がある場合はスキップ
-        if f'id="{today_id}"' in content:
-            print(f"Article for {today_id} already exists. Skipping trends.html update.")
-        else:
-            new_article_html = f"""
-            <article class="trend-article" id="{today_id}">
+        # 最新記事セクションの置換
+        latest_article_html = f"""
+            <article class="trend-article" id="trend-{today_str}">
                 <h2>{trends['date']}のトレンド</h2>
                 <p class="summary">{trends['summary']}</p>
                 
@@ -103,44 +127,51 @@ def update_html(trends):
                     <h3>AI トレンド</h3>
                     <ul>
 """
-            for item in trends['ai']:
-                new_article_html += f"""                        <li>
+        for item in trends['ai']:
+            latest_article_html += f"""                        <li>
                             <h4>{item['title']}</h4>
                             <p>{item['desc']}<br><a href="{item['url']}" target="_blank">参照元</a></p>
                         </li>
 """
-            new_article_html += """                    </ul>
+        latest_article_html += """                    </ul>
                 </section>
 
                 <section class="trend-category">
                     <h3>ゲーム トレンド</h3>
                     <ul>
 """
-            for item in trends['game']:
-                new_article_html += f"""                        <li>
+        for item in trends['game']:
+            latest_article_html += f"""                        <li>
                             <h4>{item['title']}</h4>
                             <p>{item['desc']}<br><a href="{item['url']}" target="_blank">参照元</a></p>
                         </li>
 """
-            new_article_html += """                    </ul>
+        latest_article_html += """                    </ul>
                 </section>
             </article>
 """
-            container_tag = '<div id="trends-container">'
-            if container_tag in content:
-                # 記事の挿入
-                updated_content = content.replace(container_tag, container_tag + new_article_html)
+        # trends-container の中身を最新のもの1件に置き換える（肥大化防止）
+        container_start = '<div id="trends-container">'
+        sidebar_start = '<aside class="archive">'
+        
+        parts = content.split(container_start)
+        if len(parts) > 1:
+            rest = parts[1].split(sidebar_start)
+            if len(rest) > 1:
+                # container_start + 最新記事 + sidebar_start + rest[1]
+                new_content = parts[0] + container_start + latest_article_html + sidebar_start + rest[1]
                 
-                # アーカイブの更新
-                archive_tag = '<!-- 過去記事へのリンクが追加されていきます -->'
-                new_archive_item = f'<li><a href="#{today_id}">{trends["date"]}</a></li>\n                    '
-                updated_content = updated_content.replace(archive_tag, new_archive_item + archive_tag)
+                # サイドバーにアーカイブリンクを追加（重複チェック）
+                archive_link = f'<li><a href="{today_file}">{trends["date"]}</a></li>'
+                if archive_link not in new_content:
+                    archive_tag = '<!-- 過去記事へのリンクが追加されていきます -->'
+                    new_content = new_content.replace(archive_tag, archive_link + "\n                    " + archive_tag)
                 
                 with open(trends_file, "w", encoding="utf-8") as f:
-                    f.write(updated_content)
-                print(f"Successfully updated {trends_file}")
+                    f.write(new_content)
+                print(f"Successfully updated {trends_file} (kept only latest in main)")
 
-    # Update index.html summary
+    # 3. index.html の更新
     index_file = "index.html"
     if os.path.exists(index_file):
         with open(index_file, "r", encoding="utf-8") as f:
@@ -157,5 +188,4 @@ def update_html(trends):
 if __name__ == "__main__":
     latest_trends = get_latest_trends()
     update_html(latest_trends)
-    # X APIの有料化に伴い、一時的に投稿機能を無効化
     # post_to_x(latest_trends)
