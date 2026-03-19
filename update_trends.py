@@ -37,7 +37,7 @@ def get_latest_trends():
 
     try:
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-pro',
             contents=prompt,
             config={'response_mime_type': 'application/json'}
         )
@@ -151,4 +151,5 @@ def update_html(trends):
 if __name__ == "__main__":
     latest_trends = get_latest_trends()
     update_html(latest_trends)
-    post_to_x(latest_trends)
+    # X APIの有料化に伴い、一時的に投稿機能を無効化
+    # post_to_x(latest_trends)
