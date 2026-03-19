@@ -42,8 +42,6 @@ def get_latest_trends():
             config={'response_mime_type': 'application/json'}
         )
         
-        # Gemini 2.0 SDK (google-genai) returns parsed JSON if mime type is set
-        # or we can use response.text
         trends_json = response.text
         return json.loads(trends_json)
     except Exception as e:
@@ -71,7 +69,6 @@ def post_to_x(trends):
         return
 
     try:
-        # Tweepy v4+ API v2 client initialization
         client = tweepy.Client(
             consumer_key=consumer_key, consumer_secret=consumer_secret,
             access_token=access_token, access_token_secret=access_token_secret
@@ -85,14 +82,20 @@ def post_to_x(trends):
         print(f"Error posting to X: {e}")
 
 def update_html(trends):
+    today_id = "trend-" + datetime.date.today().strftime("%Y%m%d")
+    
     # Update trends.html
     trends_file = "trends.html"
     if os.path.exists(trends_file):
         with open(trends_file, "r", encoding="utf-8") as f:
             content = f.read()
 
-        new_article_html = f"""
-            <article class="trend-article">
+        # 重複チェック: すでに同じIDの記事がある場合はスキップ
+        if f'id="{today_id}"' in content:
+            print(f"Article for {today_id} already exists. Skipping trends.html update.")
+        else:
+            new_article_html = f"""
+            <article class="trend-article" id="{today_id}">
                 <h2>{trends['date']}のトレンド</h2>
                 <p class="summary">{trends['summary']}</p>
                 
@@ -100,38 +103,42 @@ def update_html(trends):
                     <h3>AI トレンド</h3>
                     <ul>
 """
-        for item in trends['ai']:
-            new_article_html += f"""                        <li>
+            for item in trends['ai']:
+                new_article_html += f"""                        <li>
                             <h4>{item['title']}</h4>
                             <p>{item['desc']}<br><a href="{item['url']}" target="_blank">参照元</a></p>
                         </li>
 """
-        new_article_html += """                    </ul>
+            new_article_html += """                    </ul>
                 </section>
 
                 <section class="trend-category">
                     <h3>ゲーム トレンド</h3>
                     <ul>
 """
-        for item in trends['game']:
-            new_article_html += f"""                        <li>
+            for item in trends['game']:
+                new_article_html += f"""                        <li>
                             <h4>{item['title']}</h4>
                             <p>{item['desc']}<br><a href="{item['url']}" target="_blank">参照元</a></p>
                         </li>
 """
-        new_article_html += """                    </ul>
+            new_article_html += """                    </ul>
                 </section>
             </article>
 """
-        container_tag = '<div id="trends-container">'
-        if container_tag in content:
-            updated_content = content.replace(container_tag, container_tag + new_article_html)
-            archive_tag = '<!-- 過去記事へのリンクが追加されていきます -->'
-            new_archive_item = f'<li><a href="#">{trends["date"]}</a></li>\n                    '
-            updated_content = updated_content.replace(archive_tag, new_archive_item + archive_tag)
-            with open(trends_file, "w", encoding="utf-8") as f:
-                f.write(updated_content)
-            print(f"Successfully updated {trends_file}")
+            container_tag = '<div id="trends-container">'
+            if container_tag in content:
+                # 記事の挿入
+                updated_content = content.replace(container_tag, container_tag + new_article_html)
+                
+                # アーカイブの更新
+                archive_tag = '<!-- 過去記事へのリンクが追加されていきます -->'
+                new_archive_item = f'<li><a href="#{today_id}">{trends["date"]}</a></li>\n                    '
+                updated_content = updated_content.replace(archive_tag, new_archive_item + archive_tag)
+                
+                with open(trends_file, "w", encoding="utf-8") as f:
+                    f.write(updated_content)
+                print(f"Successfully updated {trends_file}")
 
     # Update index.html summary
     index_file = "index.html"
@@ -139,7 +146,6 @@ def update_html(trends):
         with open(index_file, "r", encoding="utf-8") as f:
             index_content = f.read()
         
-        # Use regex to replace the summary inside trends-summary-container
         pattern = r'(<div id="trends-summary-container">)\s*<p class="trends-summary">.*?</p>'
         replacement = f'\\1\n                <p class="trends-summary">{trends["summary"]}</p>'
         new_index_content = re.sub(pattern, replacement, index_content, flags=re.DOTALL)
