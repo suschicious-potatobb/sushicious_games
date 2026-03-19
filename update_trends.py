@@ -1,45 +1,59 @@
 import os
 import datetime
-import re
+import json
+from openai import OpenAI
 
-# トレンド情報を取得する関数（本来はAPIやスクレイピングを使用しますが、
-# GitHub Actions環境で安定して動作させるため、プレースホルダとして実装します。
-# ユーザーがAPIキーなどを持っている場合は、ここをGoogle Search APIなどに差し替え可能です。）
-
+# OpenAI APIを使用してトレンド情報を生成する
 def get_latest_trends():
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        print("Error: OPENAI_API_KEY is not set.")
+        # fallback to mock data if API key is missing
+        return get_mock_trends()
+
+    client = OpenAI(api_key=api_key)
     today = datetime.date.today().strftime("%Y年%m月%d日")
-    
-    # ここでは例として固定のトレンド情報を生成しますが、
-    # 実際にはニュースAPIなどから取得するロジックをここに記述できます。
-    trends = {
+
+    prompt = f"""
+あなたは「Sushicious Games」の専属トレンドリサーチャーです。
+「ゲーム業界」と「AI業界」の最新トレンド（本日2026年3月19日時点）を調査し、以下のJSON形式で出力してください。
+
+# Rules
+- 言語は日本語。
+- summaryは今日のトレンド全体を1文で。
+- titleは15文字以内、descは60文字以内。
+- 実在するニュースのURLを含めること。
+- 出力は純粋なJSONのみ。
+
+# Output Format (JSON)
+{{
+  "date": "{today}",
+  "summary": "...",
+  "ai": [{{ "title": "...", "desc": "...", "url": "..." }}, ...],
+  "game": [{{ "title": "...", "desc": "...", "url": "..." }}, ...]
+}}
+"""
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": prompt}],
+            response_format={ "type": "json_object" }
+        )
+        trends_json = response.choices[0].message.content
+        return json.loads(trends_json)
+    except Exception as e:
+        print(f"Error calling OpenAI API: {e}")
+        return get_mock_trends()
+
+def get_mock_trends():
+    today = datetime.date.today().strftime("%Y年%m月%d日")
+    return {
         "date": today,
-        "summary": f"{today}のAIとゲーム業界では、次世代技術の実装と市場の再編が加速しています。",
-        "ai": [
-            {
-                "title": "自律型エージェントの普及",
-                "desc": "特定のタスクを自律的に完遂するAIエージェントが、多くのビジネスツールに標準搭載され始めています。",
-                "url": "https://example.com/ai-agent-trend"
-            },
-            {
-                "title": "エッジAIの進化",
-                "desc": "デバイス上での高速な推論を可能にする小型LLMの需要が高まっています。",
-                "url": "https://example.com/edge-ai-news"
-            }
-        ],
-        "game": [
-            {
-                "title": "次世代ハードウェアの期待",
-                "desc": "各社が次世代機向けの独占タイトルの開発を強化しており、ハードウェアのスペックを最大限に引き出す試みが続いています。",
-                "url": "https://example.com/next-gen-console"
-            },
-            {
-                "title": "インディーゲームの市場拡大",
-                "desc": "独創的なアイデアを持つインディー開発者の作品が、主要プラットフォームで上位を占める傾向が続いています。",
-                "url": "https://example.com/indie-game-boom"
-            }
-        ]
+        "summary": "APIエラーが発生したため、サンプルデータを表示しています。",
+        "ai": [{"title": "AIトレンド調査中", "desc": "最新のAI情報を収集しています。", "url": "#"}],
+        "game": [{"title": "ゲームトレンド調査中", "desc": "最新のゲーム情報を収集しています。", "url": "#"}]
     }
-    return trends
 
 def update_html(trends):
     file_path = "trends.html"
