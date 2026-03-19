@@ -110,22 +110,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const games = [
         {
-            id: 'first-game',
-            url: 'sushi-tap.html',
+            id: 'sushi-tap',
+            url: 'games/sushi-tap/index.html',
             titleKey: 'game_sushi_tap_title',
             tagKey: 'game_tag_action',
-            thumbnail: 'games/first-game/thumbnail.svg'
+            thumbnail: 'games/sushi-tap/thumbnail.svg'
         },
         {
             id: 'sushi-catch',
-            url: 'sushi-catch.html',
+            url: 'games/sushi-catch/index.html',
             titleKey: 'game_sushi_catch_title',
             tagKey: 'game_tag_catch',
             thumbnail: 'games/sushi-catch/thumbnail.svg'
         },
         {
             id: 'sushi-match',
-            url: 'sushi-match.html',
+            url: 'games/sushi-match/index.html',
             titleKey: 'game_sushi_match_title',
             tagKey: 'game_tag_puzzle',
             thumbnail: 'games/sushi-match/thumbnail.svg'
