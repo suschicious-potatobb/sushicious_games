@@ -121,24 +121,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const games = [
         {
             id: 'sushi-tap',
-            url: 'games/sushi-tap/index.html',
+            url: 'games/sushi-tap/Scenes/index.html',
             titleKey: 'game_sushi_tap_title',
             tagKey: 'game_tag_action',
-            thumbnail: 'games/sushi-tap/thumbnail.svg'
+            thumbnail: 'games/sushi-tap/Assets/thumbnail.svg'
         },
         {
             id: 'sushi-catch',
-            url: 'games/sushi-catch/index.html',
+            url: 'games/sushi-catch/Scenes/index.html',
             titleKey: 'game_sushi_catch_title',
             tagKey: 'game_tag_catch',
-            thumbnail: 'games/sushi-catch/thumbnail.svg'
+            thumbnail: 'games/sushi-catch/Assets/thumbnail.svg'
         },
         {
             id: 'sushi-match',
-            url: 'games/sushi-match/index.html',
+            url: 'games/sushi-match/Scenes/index.html',
             titleKey: 'game_sushi_match_title',
             tagKey: 'game_tag_puzzle',
-            thumbnail: 'games/sushi-match/thumbnail.svg'
+            thumbnail: 'games/sushi-match/Assets/thumbnail.svg'
         }
     ];
 

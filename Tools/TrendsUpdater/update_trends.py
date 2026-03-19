@@ -83,13 +83,14 @@ def post_to_x(trends):
 
 def update_html(trends):
     today_str = datetime.date.today().strftime("%Y%m%d")
-    today_file = f"archives/trend-{today_str}.html"
+    today_href = f"archives/trend-{today_str}.html"
+    today_file = f"Web/{today_href}"
     
     # 1. アーカイブ個別ファイルの作成
-    if not os.path.exists("archives"):
-        os.makedirs("archives")
+    if not os.path.exists("Web/archives"):
+        os.makedirs("Web/archives")
         
-    template_path = "template_archive.html"
+    template_path = "Tools/TrendsUpdater/Templates/template_archive.html"
     if os.path.exists(template_path):
         with open(template_path, "r", encoding="utf-8") as f:
             template = f.read()
@@ -112,7 +113,7 @@ def update_html(trends):
         print(f"Created archive file: {today_file}")
 
     # 2. trends.html の更新（最新記事の差し替え + サイドバーの更新）
-    trends_file = "trends.html"
+    trends_file = "Web/trends.html"
     if os.path.exists(trends_file):
         with open(trends_file, "r", encoding="utf-8") as f:
             content = f.read()
@@ -162,7 +163,7 @@ def update_html(trends):
                 new_content = parts[0] + container_start + latest_article_html + sidebar_start + rest[1]
                 
                 # サイドバーにアーカイブリンクを追加（重複チェック）
-                archive_link = f'<li><a href="{today_file}">{trends["date"]}</a></li>'
+                archive_link = f'<li><a href="{today_href}">{trends["date"]}</a></li>'
                 if archive_link not in new_content:
                     archive_tag = '<!-- 過去記事へのリンクが追加されていきます -->'
                     new_content = new_content.replace(archive_tag, archive_link + "\n                    " + archive_tag)
@@ -172,7 +173,7 @@ def update_html(trends):
                 print(f"Successfully updated {trends_file} (kept only latest in main)")
 
     # 3. index.html の更新
-    index_file = "index.html"
+    index_file = "Web/index.html"
     if os.path.exists(index_file):
         with open(index_file, "r", encoding="utf-8") as f:
             index_content = f.read()
