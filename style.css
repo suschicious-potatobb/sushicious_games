@@ -236,11 +236,23 @@ main {
 /* Ad Space */
 .ad-space {
     margin: 6rem auto;
-    padding: 3rem;
+    padding: 3rem 1rem;
     background: rgba(255, 255, 255, 0.02);
     border: 1px dashed rgba(255, 255, 255, 0.1);
     border-radius: 4px;
     text-align: center;
+    overflow-x: auto; /* Handle overflow on very small screens */
+}
+
+.affiliate-banner-wrapper {
+    display: inline-block;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.affiliate-banner-wrapper table {
+    border-radius: 4px;
+    overflow: hidden;
 }
 
 .ad-label {

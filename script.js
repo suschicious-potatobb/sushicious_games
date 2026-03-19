@@ -166,4 +166,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial UI update
     updateUI();
+
+    // --- Random Ads Logic ---
+    const ads = [
+        {
+            id: 'sushi-hanaoka',
+            html: `<table cellpadding="0" cellspacing="0" border="0" style=" border:1px solid #ccc; width:300px; margin: 0 auto; background: #fff; text-align: left;"><tbody><tr style="border-style:none;"><td style="vertical-align:top; border-style:none; padding:10px; width:44px;"><a href="https://rpx.a8.net/svt/ejp?a8mat=4AZJGD+2KVN5E+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tpx84.2bo11f61.g00tpx84.2bo125bc%2Fa26031991007_4AZJGD_2KVN5E_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ff131130-shibuya%252F088003%252F%26amp%3Bm%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ff131130-shibuya%252Fi%252F10000667%252F%26amp%3Brafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7" rel="nofollow"><img border="0" alt="" src="https://thumbnail.image.rakuten.co.jp/@0_mall/f131130-shibuya/cabinet/09222044/088003_01.jpg?_ex=64x64" /></a></td><td style="font-size:12px; vertical-align:middle; border-style:none; padding:10px;"><p style="padding:0; margin:0;"><a href="https://rpx.a8.net/svt/ejp?a8mat=4AZJGD+2KVN5E+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tpx84.2bo11f61.g00tpx84.2bo125bc%2Fa26031991007_4AZJGD_2KVN5E_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ff131130-shibuya%252F088003%252F%26amp%3Bm%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ff131130-shibuya%252Fi%252F10000667%252F%26amp%3Brafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7" rel="nofollow">【ふるさと納税】[鮨花おか]特選コース お食事券 利用券 食事券 招待券 優待券 飲食券 チケット お食事券 ギフト プレゼント デート 観光 ビジネス 出張 ディナー 記念日 鮮魚 新鮮 海鮮 和食 寿司 東京都 渋谷区 都内</a></p><p style="color:#666; margin-top:5px; line-height:1.5;">価格:<span style="font-size:14px; color:#C00; font-weight:bold;">55000円</span></p></td></tr></tbody></table><img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=4AZJGD+2KVN5E+2HOM+BWGDT" alt="">`
+        },
+        {
+            id: 'shime-sushi',
+            html: `<table cellpadding="0" cellspacing="0" border="0" style=" border:1px solid #ccc; width:300px; margin: 0 auto; background: #fff; text-align: left;"><tbody><tr style="border-style:none;"><td style="vertical-align:top; border-style:none; padding:10px; width:44px;"><a href="https://rpx.a8.net/svt/ejp?a8mat=4AZJGD+2KVN5E+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tk1k4.2bo11401.g00tk1k4.2bo120a1%2Fa26031991007_4AZJGD_2KVN5E_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ff182109-sakai%252Fa-0513%252F%26amp%3Bm%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ff182109-sakai%252Fi%252F10001325%252F%26amp%3Brafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7" rel="nofollow"><img border="0" alt="" src="https://thumbnail.image.rakuten.co.jp/@0_mall/f182109-sakai/cabinet/05/a-0531-sku-s.jpg?_ex=64x64" /></a></td><td style="font-size:12px; vertical-align:middle; border-style:none; padding:10px;"><p style="padding:0; margin:0;"><a href="https://rpx.a8.net/svt/ejp?a8mat=4AZJGD+2KVN5E+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tk1k4.2bo11401.g00tk1k4.2bo120a1%2Fa26031991007_4AZJGD_2KVN5E_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ff182109-sakai%252Fa-0513%252F%26amp%3Bm%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ff182109-sakai%252Fi%252F10001325%252F%26amp%3Brafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7" rel="nofollow">【ふるさと納税】肉厚鯖がたまらない！「〆鯖寿司」</a></p><p style="color:#666; margin-top:5px; line-height:1.5;">価格:<span style="font-size:14px; color:#C00; font-weight:bold;">5000円〜</span></p></td></tr></tbody></table><img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=4AZJGD+2KVN5E+2HOM+BWGDT" alt="">`
+        },
+        {
+            id: 'aburi-salmon',
+            html: `<table cellpadding="0" cellspacing="0" border="0" style=" border:1px solid #ccc; width:300px; margin: 0 auto; background: #fff; text-align: left;"><tbody><tr style="border-style:none;"><td style="vertical-align:top; border-style:none; padding:10px; width:44px;"><a href="https://rpx.a8.net/svt/ejp?a8mat=4AZJGD+2KVN5E+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qawm4.2bo11d1b.g00qawm4.2bo12724%2Fa26031991007_4AZJGD_2KVN5E_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fichijyo%252F10002479%252F%26amp%3Bm%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fichijyo%252Fi%252F10002479%252F%26amp%3Brafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7" rel="nofollow"><img border="0" alt="" src="https://thumbnail.image.rakuten.co.jp/@0_mall/ichijyo/cabinet/salmon/aburi/20150716a_salmon1011.jpg?_ex=64x64" /></a></td><td style="font-size:12px; vertical-align:middle; border-style:none; padding:10px;"><p style="padding:0; margin:0;"><a href="https://rpx.a8.net/svt/ejp?a8mat=4AZJGD+2KVN5E+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qawm4.2bo11d1b.g00qawm4.2bo12724%2Fa26031991007_4AZJGD_2KVN5E_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fichijyo%252F10002479%252F%26amp%3Bm%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fichijyo%252Fi%252F10002479%252F%26amp%3Brafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7" rel="nofollow">炙りサーモンハラスお刺身カット済み（20切入）</a></p><p style="color:#666; margin-top:5px; line-height:1.5;">価格:<span style="font-size:14px; color:#C00; font-weight:bold;">1180円</span></p></td></tr></tbody></table><img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=4AZJGD+2KVN5E+2HOM+BWGDT" alt="">`
+        }
+    ];
+
+    function displayRandomAd() {
+        const adPlaceholders = document.querySelectorAll('.affiliate-banner-wrapper');
+        if (adPlaceholders.length === 0) return;
+
+        adPlaceholders.forEach(placeholder => {
+            const randomAd = ads[Math.floor(Math.random() * ads.length)];
+            placeholder.innerHTML = randomAd.html;
+        });
+    }
+
+    // Run random ad display
+    displayRandomAd();
 });
