@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         en: {
             nav_games: "Games",
             nav_contact: "Contact",
+            nav_trends: "Trends",
             hero_title: "Bite-sized Fun.",
             hero_subtitle: "Explore our collection of premium, mobile-optimized indie games. No installs, just play.",
             featured_games: "Featured Games",
@@ -44,11 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
             sushi_match_rule_1: "Flip over the face-down cards to find pairs of identical sushi.",
             sushi_match_rule_2: "You can flip up to two cards at a time. If the ingredients match, the cards disappear.",
             sushi_match_rule_3: "The time taken to clear all cards is recorded. Aim for the fastest time!",
-            sushi_match_tips: "The shortcut to clearing the game is to remember the locations of the cards you've flipped rather than rushing. Also, be careful with similar-looking ingredients (like tuna and fatty tuna) and match the pairs accurately. Repeated play improves your memory and speed."
+            sushi_match_tips: "The shortcut to clearing the game is to remember the locations of the cards you've flipped rather than rushing. Also, be careful with similar-looking ingredients (like tuna and fatty tuna) and match the pairs accurately. Repeated play improves your memory and speed.",
+            trends_title: "Game & AI Trends",
+            trends_subtitle: "Daily updates on the latest topics in Gaming and Artificial Intelligence."
         },
         ja: {
             nav_games: "ゲーム一覧",
             nav_contact: "お問い合わせ",
+            nav_trends: "トレンド",
             hero_title: "手軽に、楽しく。",
             hero_subtitle: "インストール不要。ブラウザで今すぐ遊べる、高品質なインディーゲーム・コレクション。",
             featured_games: "注目のゲーム",
@@ -86,7 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
             sushi_match_rule_1: "伏せられたカードをめくって、同じお寿司のペアを探してください。",
             sushi_match_rule_2: "一度にめくれるのは2枚までです。ネタが一致すればカードは消えます。",
             sushi_match_rule_3: "全てのカードを消すまでのクリアタイムが記録されます。最速を目指しましょう！",
-            sushi_match_tips: "焦ってめくるよりも、一度めくったカードの場所をしっかりと覚えることがクリアへの近道です。また、似たような色のネタ（マグロとトロなど）に注意して、正確にペアを揃えていきましょう。繰り返しプレイすることで、記憶力とスピードが向上します。"
+            sushi_match_tips: "焦ってめくるよりも、一度めくったカードの場所をしっかりと覚えることがクリアへの近道です。また、似たような色のネタ（マグロとトロなど）に注意して、正確にペアを揃えていきましょう。繰り返しプレイすることで、記憶力とスピードが向上します。",
+            trends_title: "ゲームとAIのトレンド",
+            trends_subtitle: "ゲームと人工知能に関する最新のトピックを毎日更新します。"
         }
     };
 

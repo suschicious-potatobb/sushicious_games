@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sushicious Trends | Daily Game & AI News</title>
+    
+    <!-- SEO & X (Twitter) OGP -->
+    <meta name="description" content="Daily updates on the latest trends in Gaming and AI.">
+    <meta property="og:title" content="Sushicious Trends">
+    <meta property="og:description" content="Daily updates on the latest trends in Gaming and AI.">
+    <meta property="og:image" content="https://sushicious-games.web.app/og-image.jpg">
+    <meta property="og:url" content="https://sushicious-games.web.app/trends.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@SushiciousGames">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Serif+JP:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">Sushi<span>cious</span></a>
+        <div class="nav-right">
+            <a href="https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20Game%20&%20AI%20trends%20on%20Sushicious!&url=https://sushicious-games.web.app/trends.html" target="_blank" class="x-share-btn">
+                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span>X</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#games" data-i18n="nav_games">Games</a>
+                <a href="trends.html" data-i18n="nav_trends">Trends</a>
+                <a href="contact.html" data-i18n="nav_contact">Contact</a>
+            </div>
+            <button id="lang-toggle" class="lang-toggle">JP / EN</button>
+        </div>
+    </header>
+
+    <main id="trends-main">
+        <section class="hero">
+            <h1 data-i18n="trends_title">Game & AI Trends</h1>
+            <p data-i18n="trends_subtitle">Daily updates on the latest topics in Gaming and Artificial Intelligence.</p>
+        </section>
+
+        <div id="trends-container">
+            <article class="trend-article">
+                <h2>2026年3月19日のトレンド</h2>
+                <p class="summary">2026年は、AIが単なる「ツール」から自律的に思考・行動する「同僚」へと進化する一方、ゲーム業界では待望の大型タイトルが続々と登場し、次世代ハードへの移行が本格化する年になりそうです。</p>
+                
+                <section class="trend-category">
+                    <h3>AI トレンド</h3>
+                    <ul>
+                        <li>
+                            <h4>AIは「ツール」から「同僚」へ</h4>
+                            <p>自律的に業務をこなす「AIエージェント」が本格化。人間にはAIを管理する新たなスキルが求められます。<br><a href="https://jbpress.ismedia.jp/articles/-/92531" target="_blank">参照元: JBpress</a></p>
+                        </li>
+                        <li>
+                            <h4>専門領域特化型AIの拡大</h4>
+                            <p>汎用的なLLMから、医療や金融など特定の業界に特化したAIモデルが主流になります。<br><a href="https://relipasoft.com/blog/top-ai-trend/" target="_blank">参照元: Relipa blog</a></p>
+                        </li>
+                        <li>
+                            <h4>中国製オープンソースモデルの台頭</h4>
+                            <p>性能とコストの面から、中国企業開発のオープンソースLLMが世界的に採用され始めています。<br><a href="https://www.technologyreview.jp/s/375307/whats-next-for-ai-in-2026/" target="_blank">参照元: MIT Tech Review</a></p>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="trend-category">
+                    <h3>ゲーム トレンド</h3>
+                    <ul>
+                        <li>
+                            <h4>2026年は期待の新作が豊作</h4>
+                            <p>『紅の砂漠』や『Fable』シリーズ新作など、多くの大型タイトルが発売を控えています。<br><a href="https://jp.ign.com/2025nenmatsu/82088/feature/2026-top-20" target="_blank">参照元: IGN JAPAN</a></p>
+                        </li>
+                        <li>
+                            <h4>Switch 2対応タイトルの本格化</h4>
+                            <p>次世代ハードの登場に伴い、対応ソフトが続々とリリースされ、マルチプラットフォーム展開が加速します。<br><a href="https://jp.ign.com/2025nenmatsu/82088/feature/2026-top-20" target="_blank">参照元: IGN JAPAN</a></p>
+                        </li>
+                        <li>
+                            <h4>CygamesがAIスタジオを設立</h4>
+                            <p>大手ゲーム会社のCygamesがAI専門の子会社を設立。ただし、アート制作には生成AIを使用しないと明言しています。<br><a href="https://www.4gamer.net/tags/TN/TN011/" target="_blank">参照元: 4Gamer.net</a></p>
+                        </li>
+                    </ul>
+                </section>
+            </article>
+
+            <aside class="archive">
+                <h3>過去のトレンド</h3>
+                <ul>
+                    <li><a href="#">2026年3月 (1)</a></li>
+                    <!-- 過去記事へのリンクが追加されていきます -->
+                </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <a href="index.html" class="logo">Sushi<span>cious</span></a>
+            <div class="footer-links">
+                <a href="terms.html" data-i18n="footer_terms">Terms</a>
+                <a href="privacy.html" data-i18n="footer_privacy">Privacy</a>
+                <a href="contact.html" data-i18n="footer_contact">Contact</a>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2026 Sushicious Games. <span data-i18n="all_rights_reserved">All rights reserved.</span></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

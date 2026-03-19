@@ -263,6 +263,101 @@ main {
     letter-spacing: 2px;
 }
 
+/* Trends Page */
+#trends-main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+#trends-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 768px) {
+    #trends-container {
+        grid-template-columns: 3fr 1fr;
+    }
+}
+
+.trend-article h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #FFD700; /* Gold color for emphasis */
+}
+
+.trend-article .summary {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    color: #e0e0e0;
+}
+
+.trend-category h3 {
+    font-size: 2rem;
+    border-bottom: 2px solid #FFD700;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.trend-category ul {
+    list-style: none;
+    padding: 0;
+}
+
+.trend-category li {
+    margin-bottom: 2rem;
+}
+
+.trend-category h4 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.trend-category p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.trend-category a {
+    color: #FFD700;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.trend-category a:hover {
+    text-decoration: underline;
+}
+
+.archive {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.archive h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.archive ul {
+    list-style: none;
+    padding: 0;
+}
+
+.archive li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem 0;
+}
+
+.archive li a:hover {
+    color: #FFD700;
+}
+
 /* Footer */
 footer {
     padding: 4rem 5%;
