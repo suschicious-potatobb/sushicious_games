@@ -12,14 +12,14 @@ jobs:
       contents: write    # リポジトリへの書き込み権限を付与
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
     - name: Pull
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git pull origin main --rebase
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v5
