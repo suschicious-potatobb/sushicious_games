@@ -3,7 +3,7 @@ import datetime
 import json
 import re
 import tweepy
-import google.generativeai as genai
+from google import genai
 
 # Google Gemini APIを使用してトレンド情報を生成する
 def get_latest_trends():
@@ -12,8 +12,7 @@ def get_latest_trends():
         print("Error: GEMINI_API_KEY is not set.")
         return get_mock_trends()
 
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    client = genai.Client(api_key=api_key)
     today = datetime.date.today().strftime("%Y年%m月%d日")
 
     prompt = f"""
@@ -37,14 +36,15 @@ def get_latest_trends():
 """
 
     try:
-        response = model.generate_content(prompt)
-        # Extract JSON from the response text, removing markdown backticks if present
-        json_text = re.search(r'```json\n(.*?)\n```', response.text, re.DOTALL)
-        if json_text:
-            trends_json = json_text.group(1)
-        else:
-            trends_json = response.text
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=prompt,
+            config={'response_mime_type': 'application/json'}
+        )
         
+        # Gemini 2.0 SDK (google-genai) returns parsed JSON if mime type is set
+        # or we can use response.text
+        trends_json = response.text
         return json.loads(trends_json)
     except Exception as e:
         print(f"Error calling Gemini API: {e}")
