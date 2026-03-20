@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
             game_sushi_catch_desc: "Catch falling sushi on your plate!",
             game_sushi_match_title: "Sushi Match",
             game_sushi_match_desc: "Match the pairs of sushi as fast as you can!",
+            game_sushi_docking_title: "SUSHI-Docking",
+            game_sushi_docking_desc: "A physics merge puzzle: dock ingredients, create sushi, and climb the rankings!",
             nav_home: "Home",
             about_game: "About this game",
             how_to_play: "How to play",
@@ -55,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             nav_games: "ゲーム一覧",
             nav_contact: "お問い合わせ",
             nav_trends: "トレンド",
-            hero_title: "手軽に、楽しく。",
-            hero_subtitle: "インストール不要。ブラウザで今すぐ遊べる、高品質なインディーゲーム・コレクション。",
+            hero_title: "美味しく、楽しく。",
+            hero_subtitle: "インストール不要。ブラウザで今すぐ遊べる、寿司インディーゲーム・コレクション。",
             featured_games: "注目のゲーム",
             advertisement: "スポンサー広告",
             ad_space: "広告スペース",
@@ -74,6 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
             game_sushi_catch_desc: "お皿を動かして落ちてくる寿司をキャッチしよう！",
             game_sushi_match_title: "寿司マッチ",
             game_sushi_match_desc: "同じ寿司のペアを素早く揃えよう！",
+            game_sushi_docking_title: "寿司ドッキング",
+            game_sushi_docking_desc: "物理合体パズル！具材をドッキングして寿司を作り、ランキング上位を目指そう！",
             nav_home: "ホーム",
             about_game: "このゲームについて",
             how_to_play: "遊び方",
@@ -123,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'sushi-tap',
             url: 'games/sushi-tap/Scenes/index.html',
             titleKey: 'game_sushi_tap_title',
+            descKey: 'game_sushi_tap_desc',
             tagKey: 'game_tag_action',
             thumbnail: 'games/sushi-tap/Assets/thumbnail.svg'
         },
@@ -130,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'sushi-catch',
             url: 'games/sushi-catch/Scenes/index.html',
             titleKey: 'game_sushi_catch_title',
+            descKey: 'game_sushi_catch_desc',
             tagKey: 'game_tag_catch',
             thumbnail: 'games/sushi-catch/Assets/thumbnail.svg'
         },
@@ -137,8 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'sushi-match',
             url: 'games/sushi-match/Scenes/index.html',
             titleKey: 'game_sushi_match_title',
+            descKey: 'game_sushi_match_desc',
             tagKey: 'game_tag_puzzle',
             thumbnail: 'games/sushi-match/Assets/thumbnail.svg'
+        },
+        {
+            id: 'sushi-docking',
+            url: 'games/sushi-docking/Scenes/index.html',
+            titleKey: 'game_sushi_docking_title',
+            descKey: 'game_sushi_docking_desc',
+            tagKey: 'game_tag_puzzle',
+            thumbnail: 'games/sushi-docking/Assets/thumbnail.svg'
         }
     ];
 
@@ -153,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const title = translations[currentLang][game.titleKey];
             const tag = translations[currentLang][game.tagKey];
+            const desc = translations[currentLang][game.descKey];
 
             gameCard.innerHTML = `
                 <div class="thumbnail-container">
@@ -161,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="game-info">
                     <span class="game-tag">${tag}</span>
                     <h3>${title}</h3>
+                    <p class="game-desc">${desc}</p>
                 </div>
             `;
 
