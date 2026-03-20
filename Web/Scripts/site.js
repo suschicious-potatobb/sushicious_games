@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const gameList = document.getElementById('game-list');
     const langToggle = document.getElementById('lang-toggle');
+    const gameDetailRoot = document.getElementById('game-detail');
 
     // --- Translations ---
     const translations = {
@@ -56,7 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             trends_title: "Game & AI Trends",
             trends_subtitle: "Daily updates on the latest topics in Gaming and Artificial Intelligence.",
             latest_trends_title: "Today's Trends",
-            view_all_trends: "View All Trends"
+            view_all_trends: "View All Trends",
+            back_to_games: "Back to games"
         },
         ja: {
             nav_games: "ゲーム一覧",
@@ -110,7 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
             trends_title: "ゲームとAIのトレンド",
             trends_subtitle: "ゲームと人工知能に関する最新のトピックを毎日更新します。",
             latest_trends_title: "今日のトレンド",
-            view_all_trends: "トレンド記事一覧を見る"
+            view_all_trends: "トレンド記事一覧を見る",
+            back_to_games: "ゲーム一覧へ"
         }
     };
 
@@ -127,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update games list
         renderGames();
+        renderGameDetail();
         
         // Update document language
         document.documentElement.lang = currentLang;
@@ -135,35 +139,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const games = [
         {
             id: 'sushi-tap',
-            url: 'games/sushi-tap/Scenes/index.html',
+            sceneUrl: '/games/sushi-tap/Scenes/',
             titleKey: 'game_sushi_tap_title',
             descKey: 'game_sushi_tap_desc',
             tagKey: 'game_tag_action',
-            thumbnail: 'games/sushi-tap/Assets/thumbnail.svg'
+            thumbnail: 'games/sushi-tap/Assets/thumbnail.svg',
+            descLongKey: 'sushi_tap_desc_long',
+            ruleKeys: ['sushi_tap_rule_1', 'sushi_tap_rule_2', 'sushi_tap_rule_3'],
+            tipsKey: 'sushi_tap_tips'
         },
         {
             id: 'sushi-catch',
-            url: 'games/sushi-catch/Scenes/index.html',
+            sceneUrl: '/games/sushi-catch/Scenes/',
             titleKey: 'game_sushi_catch_title',
             descKey: 'game_sushi_catch_desc',
             tagKey: 'game_tag_catch',
-            thumbnail: 'games/sushi-catch/Assets/thumbnail.svg'
+            thumbnail: 'games/sushi-catch/Assets/thumbnail.svg',
+            descLongKey: 'sushi_catch_desc_long',
+            ruleKeys: ['sushi_catch_rule_1', 'sushi_catch_rule_2', 'sushi_catch_rule_3'],
+            tipsKey: 'sushi_catch_tips'
         },
         {
             id: 'sushi-match',
-            url: 'games/sushi-match/Scenes/index.html',
+            sceneUrl: '/games/sushi-match/Scenes/',
             titleKey: 'game_sushi_match_title',
             descKey: 'game_sushi_match_desc',
             tagKey: 'game_tag_puzzle',
-            thumbnail: 'games/sushi-match/Assets/thumbnail.svg'
+            thumbnail: 'games/sushi-match/Assets/thumbnail.svg',
+            descLongKey: 'sushi_match_desc_long',
+            ruleKeys: ['sushi_match_rule_1', 'sushi_match_rule_2', 'sushi_match_rule_3'],
+            tipsKey: 'sushi_match_tips'
         },
         {
             id: 'sushi-docking',
-            url: 'games/sushi-docking/Scenes/index.html',
+            sceneUrl: '/games/sushi-docking/Scenes/',
             titleKey: 'game_sushi_docking_title',
             descKey: 'game_sushi_docking_desc',
             tagKey: 'game_tag_puzzle',
-            thumbnail: 'games/sushi-docking/Assets/thumbnail.svg'
+            thumbnail: 'games/sushi-docking/Assets/thumbnail.svg',
+            descLongKey: 'sushi_docking_desc_long',
+            ruleKeys: ['sushi_docking_rule_1', 'sushi_docking_rule_2', 'sushi_docking_rule_3'],
+            tipsKey: 'sushi_docking_tips'
         }
     ];
 
@@ -173,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         games.forEach(game => {
             const gameCard = document.createElement('a');
-            gameCard.href = game.url;
+            gameCard.href = `game?id=${encodeURIComponent(game.id)}`;
             gameCard.className = 'game-card';
 
             const title = translations[currentLang][game.titleKey];
@@ -195,11 +211,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    langToggle.addEventListener('click', () => {
-        currentLang = currentLang === 'en' ? 'ja' : 'en';
-        localStorage.setItem('sushicious_lang', currentLang);
-        updateUI();
-    });
+    function renderGameDetail() {
+        if (!gameDetailRoot) return;
+
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const game = games.find(g => g.id === id);
+
+        const titleEl = document.getElementById('game-title');
+        const shortDescEl = document.getElementById('game-short-desc');
+        const longDescEl = document.getElementById('game-long-desc');
+        const rulesEl = document.getElementById('game-rules');
+        const tipsEl = document.getElementById('game-tips');
+        const iframeEl = document.getElementById('game-iframe');
+
+        if (!game) {
+            if (titleEl) titleEl.textContent = 'Game';
+            if (shortDescEl) shortDescEl.textContent = '';
+            if (longDescEl) longDescEl.textContent = '';
+            if (rulesEl) rulesEl.innerHTML = '';
+            if (tipsEl) tipsEl.textContent = '';
+            if (iframeEl) iframeEl.removeAttribute('src');
+            return;
+        }
+
+        const title = translations[currentLang][game.titleKey];
+        const shortDesc = translations[currentLang][game.descKey];
+        const longDesc = translations[currentLang][game.descLongKey];
+        const tips = translations[currentLang][game.tipsKey];
+
+        if (titleEl) titleEl.textContent = title;
+        if (shortDescEl) shortDescEl.textContent = shortDesc;
+        if (longDescEl) longDescEl.textContent = longDesc;
+        if (tipsEl) tipsEl.textContent = tips;
+
+        if (rulesEl) {
+            rulesEl.innerHTML = '';
+            game.ruleKeys.forEach(key => {
+                const li = document.createElement('li');
+                li.textContent = translations[currentLang][key];
+                rulesEl.appendChild(li);
+            });
+        }
+
+        if (iframeEl) {
+            iframeEl.src = game.sceneUrl;
+            iframeEl.setAttribute('allow', 'fullscreen; gamepad; autoplay');
+        }
+
+        document.title = `${title} - Sushicious Games`;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', shortDesc);
+    }
+
+    if (langToggle) {
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ja' : 'en';
+            localStorage.setItem('sushicious_lang', currentLang);
+            updateUI();
+        });
+    }
 
     // Initial UI update
     updateUI();
